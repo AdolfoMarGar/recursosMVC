@@ -1,0 +1,1 @@
+CREATE TABLE `gestionRec`.`Resources` (`id` INT(5) NOT NULL AUTO_INCREMENT , `name` VARCHAR(100) NOT NULL , `description` VARCHAR(500) NOT NULL , `location` VARCHAR(100) NOT NULL , `image` VARCHAR(500) NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB; 
