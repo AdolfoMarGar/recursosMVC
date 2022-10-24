@@ -21,21 +21,35 @@ $image = $resource->image ?? "";
 
 // Creamos el formulario con los campos del resource
 echo "<form enctype='multipart/form-data' action = 'index.php' method = 'post'>
-    <input type='hidden' name='MAX_FILE_SIZE' value='512000' />
-
+        <table border ='1'>
         <input type='hidden' name='id' value='".$id."'>
-        Nombre:<input type='text' name='name' value='".$name."'><br>
-        Descripcion:<input type='text' name='description' value='".$description."'><br>
-        Localización:<input type='text' name='location' value='".$location."'><br>
-        Imagen: ";
+        <input type='hidden' name='MAX_FILE_SIZE' value='512000' />
+        <tr>
+        <td>Nombre:</td>
+        <td><input type='text' name='name' value='".$name."'></td>
+        </tr>
+        <tr>
+        <td>Descripcion:</td>
+        <td><input type='text' name='description' value='".$description."'></td>
+        </tr>
+        <tr>
+        <td>Localización:</td>
+        <td><input type='text' name='location' value='".$location."'></td>
+        </tr>
+        <tr>
+        <td>Imagen:</td>
+        <td>
+
+         ";
         if ($image!="") {
             echo"<img src='" . $image . "' width='100' height='100'></br>";
         }
         echo"
-
         <input type='file' name='image'> 
-
-        <br><br>";
+        </td>
+        </tr>
+        </table>
+        <br>";
 
 
 
@@ -45,5 +59,7 @@ if (isset($resource)) {
 } else {
     echo "  <input type='hidden' name='action' value='insertarResource'>";
 }
+echo '<button name="Inicio" role="link" onclick="window.location=\'/index.php\'">Inicio</button>';
+
 echo "	<input type='submit'></form>";
-echo "<p><a href='index.php'>Volver</a></p>";
+
