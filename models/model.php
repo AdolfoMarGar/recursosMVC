@@ -15,12 +15,12 @@ class Model {
   }
 
   public function getAll() {
-    $list = $this->db->dataQuery("SELECT * FROM ".$this->table);
+    $list = $this->db->selectQuery("SELECT * FROM ".$this->table);
     return $list;
   }
 
   public function get($id) {
-    $record = $this->db->dataQuery("SELECT * FROM ".$this->table." WHERE ".$this->idColumn."= $id");
+    $record = $this->db->selectQuery("SELECT * FROM ".$this->table." WHERE ".$this->idColumn."= $id");
     return $record;
   } 
 

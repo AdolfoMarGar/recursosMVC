@@ -1,8 +1,8 @@
 <?php 
     class View {
-        public static function render($carpeta, $nombreVista, $datos = null){
+        public static function render( $nombreVista, $data = null){
             include("./views/plantilla/head.php");
-            include("./views/$carpeta/$nombreVista");
+            include("./views/$nombreVista.php");
             include("./views/plantilla/end.php");
         }
     }
