@@ -14,7 +14,7 @@ if (isset($resource)) {
 // Sacamos los datos del resource (si existe) a variables individuales para mostrarlo en los inputs del formulario.
 // (Si no hay resource, dejamos los campos en blanco y el formulario servirá para inserción).
 $id = $resource->id ?? ""; 
-$name = $resource->name ?? "";
+$nameRes = $resource->nameRes ?? "";
 $description = $resource->description ?? "";
 $location = $resource->location ?? "";
 $image = $resource->image ?? "";
@@ -23,10 +23,9 @@ $image = $resource->image ?? "";
 echo "<form enctype='multipart/form-data' action = 'index.php' method = 'post'>
         <table border ='1'>
         <input type='hidden' name='id' value='".$id."'>
-        <input type='hidden' name='MAX_FILE_SIZE' value='512000' />
         <tr>
         <td>Nombre:</td>
-        <td><input type='text' name='name' value='".$name."'></td>
+        <td><input type='text' name='nameRes' value='".$nameRes."'></td>
         </tr>
         <tr>
         <td>Descripcion:</td>
@@ -45,7 +44,7 @@ echo "<form enctype='multipart/form-data' action = 'index.php' method = 'post'>
             echo"<img src='" . $image . "' width='100' height='100'></br>";
         }
         echo"
-        <input type='file' name='image'> 
+        <input type='file' name='archivo'> 
         </td>
         </tr>
         </table>

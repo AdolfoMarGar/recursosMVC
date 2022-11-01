@@ -36,4 +36,34 @@ class Resources extends Model{
                                 WHERE id = '$id'");
         return $ok;
     }
+
+
+    public function uploadImage(){
+        $archivo = $_FILES['archivo']['name'];
+        if (isset($archivo) && $archivo != "") {
+            //Obtenemos algunos datos necesarios sobre el archivo
+            $tipo = $_FILES['archivo']['type'];
+            $tamano = $_FILES['archivo']['size'];
+            $temp = $_FILES['archivo']['tmp_name'];
+            //Se comprueba si el archivo a cargar es correcto observando su extensión y tamaño
+           if (!((strpos($tipo, "gif") || strpos($tipo, "jpeg") || strpos($tipo, "jpg")|| strpos($tipo, "webp") || strpos($tipo, "png")) && ($tamano < 2000000000))) {
+              echo '<div><b>Error. La extensión o el tamaño de los archivos no es correcta.<br/>
+              - Se permiten archivos .gif, .jpg, .png, .webp y de 200 kb como máximo.</b></div>';
+           }
+           else {
+              //Si la imagen es correcta en tamaño y tipo
+              //Se intenta subir al servidor
+              if (move_uploaded_file($temp, 'images/'.$archivo)) {
+                  //Cambiamos los permisos del archivo a 777 para poder modificarlo posteriormente
+                  chmod('images/'.$archivo, 0777);
+                  return 'images/'.$archivo;
+
+              }
+              else {
+                 //Si no se ha podido subir la imagen, mostramos un mensaje de error
+                 echo '<div><b>Ocurrió algún error al subir el fichero. No pudo guardarse.</b></div>';
+              }
+            }
+         }
+    }
 }
