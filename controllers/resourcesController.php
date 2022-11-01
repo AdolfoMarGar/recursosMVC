@@ -2,7 +2,7 @@
 
 // CONTROLADOR DE LIBROS
 include_once("models/resources.php");  // Modelos
-
+include_once("models/seguridad.php");
 include_once("views/view.php");
 
 class ResourcesController{
@@ -14,8 +14,7 @@ class ResourcesController{
     }
 
     // --------------------------------- MOSTRAR LISTA DE RECURSOS ----------------------------------------
-    public function mostrarListaResources()
-    {
+    public function mostrarListaResources(){
         //if (Seguridad::haySesion()) {
             $data["listaResources"] = $this->resource->getAll();
             View::render("resource/all", $data);
@@ -28,8 +27,7 @@ class ResourcesController{
 
     // --------------------------------- FORMULARIO ALTA DE RECURSOS ----------------------------------------
 
-    public function formularioInsertarResources()
-    {
+    public function formularioInsertarResources(){
         //if (Seguridad::haySesion()) {
             $data["resource"]=null;
             View::render("resource/form", $data);
@@ -42,39 +40,32 @@ class ResourcesController{
 
     // --------------------------------- INSERTAR LIBROS ----------------------------------------
 
-    public function insertarLibro()
-    {
-        if (Seguridad::haySesion()) {
-            // Primero, recuperamos todos los datos del formulario
-            $titulo = Seguridad::limpiar($_REQUEST["titulo"]);
-            $genero = Seguridad::limpiar($_REQUEST["genero"]);
-            $pais = Seguridad::limpiar($_REQUEST["pais"]);
-            $ano = Seguridad::limpiar($_REQUEST["ano"]);
-            $numPaginas = Seguridad::limpiar($_REQUEST["numPaginas"]);
-            $autores = Seguridad::limpiar($_REQUEST["autor"]);
+    public function insertarResource(){
 
-            $result = $this->libro->insert($titulo, $genero, $pais, $ano, $numPaginas);
+       // if (Seguridad::haySesion()) {
+            // Primero, recuperamos todos los datos del formulario
+            
+            $nameRes = Seguridad::limpiar($_REQUEST["nameRes"]);
+            $description = Seguridad::limpiar($_REQUEST["description"]);
+            $location = Seguridad::limpiar($_REQUEST["location"]);
+            $image = $this->resource->uploadImage();            
+            $result = $this->resource->insert($nameRes, $description, $location, $image);
             if ($result == 1) {
-                // Si la inserción del libro ha funcionado, continuamos insertando los autores, pero
-                // necesitamos conocer el id del libro que acabamos de insertar
-                $idLibro = $this->libro->getMaxId();
-                // Ya podemos insertar todos los autores junto con el libro en "escriben"
-                $result = $this->libro->insertAutores($idLibro, $autores);
-                if ($result > 0) {
-                    $data["info"] = "Libro insertado con éxito";
-                } else {
-                    $data["error"] = "Error al insertar los autores del libro";
-                }
+                
+                $data["info"] = "Libro insertado con éxito";
+               
             } else {
                 // Si la inserción del libro ha fallado, mostramos mensaje de error
                 $data["error"] = "Error al insertar el libro";
             }
-            $data["listaLibros"] = $this->libro->getAll();
-            View::render("libro/all", $data);
-        } else {
+            $data["listaResources"] = $this->resource->getAll();
+            View::render("resource/all", $data);
+            
+       /* } else {
             $data["error"] = "No tienes permiso para eso";
             View::render("usuario/login", $data);
         }
+        */
     }
 
     // --------------------------------- BORRAR LIBROS ----------------------------------------
@@ -126,15 +117,13 @@ class ResourcesController{
         if (Seguridad::haySesion()) {
             // Primero, recuperamos todos los datos del formulario
             $idLibro = Seguridad::limpiar($_REQUEST["idLibro"]);
-            $titulo = Seguridad::limpiar($_REQUEST["titulo"]);
-            $genero = Seguridad::limpiar($_REQUEST["genero"]);
-            $pais = Seguridad::limpiar($_REQUEST["pais"]);
-            $ano = Seguridad::limpiar($_REQUEST["ano"]);
-            $numPaginas = Seguridad::limpiar($_REQUEST["numPaginas"]);
-            $autores = Seguridad::limpiar($_REQUEST["autor"]);
+            $nameRes = Seguridad::limpiar($_REQUEST["nameRes"]);
+            $description = Seguridad::limpiar($_REQUEST["description"]);
+            $location = Seguridad::limpiar($_REQUEST["location"]);
+            $image = Seguridad::limpiar($_REQUEST["image"]);
 
             // Pedimos al modelo que haga el update
-            $result = $this->libro->update($idLibro, $titulo, $genero, $pais, $ano, $numPaginas);
+            $result = $this->libro->update($idLibro, $nameRes, $description, $location, $image);
             if ($result == 1) {
                 $data["info"] = "Libro actualizado con éxito";
             } else {
