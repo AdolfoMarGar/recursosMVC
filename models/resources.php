@@ -25,7 +25,7 @@ class Resources extends Model{
     }
 
 
-    // Actualiza un libro (todo menos sus autores). Devuelve 1 si tiene éxito y 0 en caso de fallo.
+    // Actualiza un resource. Devuelve 1 si tiene éxito y 0 en caso de fallo.
     public function update($id, $name, $description, $location, $image)
     {
         $ok = $this->db->dataManipulation("UPDATE resources SET
@@ -54,8 +54,8 @@ class Resources extends Model{
               //Si la imagen es correcta en tamaño y tipo
               //Se intenta subir al servidor
               if (move_uploaded_file($temp, 'images/'.$archivo)) {
-                  //Cambiamos los permisos del archivo a 777 para poder modificarlo posteriormente
                   return 'images/'.$archivo;
+                  //Si se ha realizado correctamente devolvemos la ruta del archivo donde se ha guardado la imagen en el server
 
               }
               else {

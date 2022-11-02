@@ -1,23 +1,24 @@
 <?php
+//Falta implementar la capa de seguridad.
 
-// CONTROLADOR DE LIBROS
-include_once("models/resources.php");  // Modelos
-include_once("models/seguridad.php");
-include_once("views/view.php");
+// CONTROLADOR DE RESOURCES
+include_once("models/resources.php");  // Modelo de resources
+include_once("models/seguridad.php");  // Modelo de seguridad
+include_once("views/view.php");        // Modelo base de View
 
 class ResourcesController{
-    private $db;             // Conexión con la base de datos
-    private $resource;  // Modelos
+    private $db;        // Conexión con la base de datos
+    private $resource;  // Objeto del modelo resource para utilizar sus metodos
 
     public function __construct(){
-        $this->resource = new Resources();
+        $this->resource = new Resources();  //Inicializamos el objeto resource
     }
 
     // --------------------------------- MOSTRAR LISTA DE RECURSOS ----------------------------------------
     public function mostrarListaResources(){
         //if (Seguridad::haySesion()) {
-            $data["listaResources"] = $this->resource->getAll();
-            View::render("resource/all", $data);
+            $data["listaResources"] = $this->resource->getAll();  //Obtenemos un arraya con la totalidad de los elementos en la tabla recursos
+            View::render("resource/all", $data);  //Llamamos a la vista resource/all y le pasamos los datos obtenidos.
         /*} else {
             $data["error"] = "No tienes permiso para eso";
             View::render("usuario/login", $data);
@@ -29,8 +30,9 @@ class ResourcesController{
 
     public function formularioInsertarResources(){
         //if (Seguridad::haySesion()) {
-            $data["resource"]=null;
-            View::render("resource/form", $data);
+            $data["resource"]=null; //Le pasamos resource=null para que no de error al buscar en algo inexistente. Aunque no tenga valores al asignarle null
+                                    //se le ha creado el espacio de memoria y nos ahorra problemas
+            View::render("resource/form", $data);  //LLamamos a la vista formulario de resources
         /*} else {
             $data["error"] = "No tienes permiso para eso";
             View::render("usuario/login", $data);
@@ -48,16 +50,16 @@ class ResourcesController{
             $nameRes = Seguridad::limpiar($_REQUEST["nameRes"]);
             $description = Seguridad::limpiar($_REQUEST["description"]);
             $location = Seguridad::limpiar($_REQUEST["location"]);
-            $image = $this->resource->uploadImage();            
-            $result = $this->resource->insert($nameRes, $description, $location, $image);
+            $image = $this->resource->uploadImage() ?? "";       //Se le asigna "" si no se sube ninguna imagen.      
+            $result = $this->resource->insert($nameRes, $description, $location, $image); //Se ejecuta un insert a la db a traves del modelo resources
             if ($result == 1) {
-                
                 $data["info"] = "Recuros insertado con éxito.";
-               
             } else {
-                // Si la inserción del libro ha fallado, mostramos mensaje de error
                 $data["error"] = "Error al insertar el recurso.";
             }
+            //Segun la respuesta de la db indicamos si se ha realizado el insert correctamente o no.
+
+            //Vovlemos a cargar la vista principal de resources
             $data["listaResources"] = $this->resource->getAll();
             View::render("resource/all", $data);
             
@@ -70,19 +72,19 @@ class ResourcesController{
 
     // --------------------------------- BORRAR RESOURCE ----------------------------------------
 
-    public function borrarResource()
-    {
+    public function borrarResource(){
         //if (Seguridad::haySesion()) {
-            // Recuperamos el id del libro que hay que borrar
+            // Obtenemos el id del recurso a borrar a traves del formulario
             $id = Seguridad::limpiar($_REQUEST["idResource"]);
-            // Pedimos al modelo que intente borrar el libro
+            // Pedimos al modelo resource que intente borrarlo
             $result = $this->resource->delete($id);
-            // Comprobamos si el borrado ha tenido éxito
+            // Comprobamos si el borrado ha tenido éxito segun la respuesta de la db
             if ($result == 0) {
-                $data["error"] = "Ha ocurrido un error al borrar el libro. Por favor, inténtelo de nuevo";
+                $data["error"] = "Ha ocurrido un error al borrar el recurso. Por favor, inténtelo de nuevo";
             } else {
-                $data["info"] = "Libro borrado con éxito";
+                $data["info"] = "Recurso borrado con éxito";
             }
+            //Volvemos a cargar todos los recursos
             $data["listaResources"] = $this->resource->getAll();
             View::render("resource/all", $data);
             /*
@@ -97,13 +99,12 @@ class ResourcesController{
 
     public function formularioModificarResource(){
         //if (Seguridad::haySesion()) {
-            // Recuperamos los datos del libro a modificar
+            // Recuperamos la id del libro a modificar y la asignamos a data
             $array = $this->resource->get($_REQUEST["idResource"]);
             $data["resource"] = $array[0];
             
-            // Renderizamos la vista de inserción de libros, pero enviándole los datos del libro recuperado.
-            // Esa vista necesitará la lista de todos los autores y, además, la lista
-            // de los autores de este libro en concreto.
+            // Renderizamos la vista de inserción de recursos, pero enviándole los datos del recurso ya obtenido en su totalidad.
+            // La vista en si se encarga de utilizar los datos pasados para cargar el formulario y trabajar a partir de ahi
             View::render("resource/form", $data);
             /*
         } else {
@@ -119,6 +120,8 @@ class ResourcesController{
 
         //if (Seguridad::haySesion()) {
             // Primero, recuperamos todos los datos del formulario
+
+            //Recuperamos los datos del formulario.
             $id = Seguridad::limpiar($_REQUEST["id"]);
             $nameRes = Seguridad::limpiar($_REQUEST["nameRes"]);
             $description = Seguridad::limpiar($_REQUEST["description"]);
@@ -130,9 +133,10 @@ class ResourcesController{
             if ($result == 1) {
                 $data["info"] = "Recurso actualizado con éxito";
             } else {
-                // Si la modificación del libro ha fallado, mostramos mensaje de error
                 $data["error"] = "Ha ocurrido un error al modificar el recurso. Por favor, inténtelo más tarde";
             }
+            //Segun la respuesta de la db decimos si se ha realizado correctamente o no
+            //Y volvemos a cargar la vista inicial
             $data["listaResources"] = $this->resource->getAll();
             View::render("resource/all", $data);
         /*} else {
@@ -144,23 +148,24 @@ class ResourcesController{
 
     // --------------------------------- BUSCAR RESOURCE ----------------------------------------
 
-    public function buscarLibros()
-    {
-        if (Seguridad::haySesion()) {
+    //falta implementar un buscardor tanto en la vista como en el modelo resources para que esto se pueda utilizar.
+    public function buscarResources(){
+        //if (Seguridad::haySesion()) {
             // Recuperamos el texto de búsqueda de la variable de formulario
             $textoBusqueda = Seguridad::limpiar($_REQUEST["textoBusqueda"]);
             // Buscamos los libros que coinciden con la búsqueda
-            $data["listaLibros"] = $this->libro->search($textoBusqueda);
+            $data["listaResources"] = $this->libro->search($textoBusqueda);
             $data["info"] = "Resultados de la búsqueda: <i>$textoBusqueda</i>";
             // Mostramos el resultado en la misma vista que la lista completa de libros
             View::render("libro/all", $data);
+        /*
         } else {
             $data["error"] = "No tienes permiso para eso";
             View::render("usuario/login", $data);
         }
+        */
     }
 
 
-    // -------- LA APLICACIÓN CONTINUARÍA DESARROLLÁNDOSE AÑADIENDO FUNCIONES AQUÍ ------------------------
 
 } // class
