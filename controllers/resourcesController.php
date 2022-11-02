@@ -38,7 +38,7 @@ class ResourcesController{
         */
     }
 
-    // --------------------------------- INSERTAR LIBROS ----------------------------------------
+    // --------------------------------- INSERTAR RESOURCE ----------------------------------------
 
     public function insertarResource(){
 
@@ -68,33 +68,34 @@ class ResourcesController{
         */
     }
 
-    // --------------------------------- BORRAR LIBROS ----------------------------------------
+    // --------------------------------- BORRAR RESOURCE ----------------------------------------
 
-    public function borrarLibro()
+    public function borrarResource()
     {
-        if (Seguridad::haySesion()) {
+        //if (Seguridad::haySesion()) {
             // Recuperamos el id del libro que hay que borrar
-            $idLibro = Seguridad::limpiar($_REQUEST["idLibro"]);
+            $id = Seguridad::limpiar($_REQUEST["idResource"]);
             // Pedimos al modelo que intente borrar el libro
-            $result = $this->libro->delete($idLibro);
+            $result = $this->resource->delete($id);
             // Comprobamos si el borrado ha tenido éxito
             if ($result == 0) {
                 $data["error"] = "Ha ocurrido un error al borrar el libro. Por favor, inténtelo de nuevo";
             } else {
                 $data["info"] = "Libro borrado con éxito";
             }
-            $data["listaLibros"] = $this->libro->getAll();
-            View::render("libro/all", $data);
+            $data["listaResources"] = $this->resource->getAll();
+            View::render("resource/all", $data);
+            /*
         } else {
             $data["error"] = "No tienes permiso para eso";
             View::render("usuario/login", $data);
         }
+        */
     }
 
-    // --------------------------------- FORMULARIO MODIFICAR LIBROS ----------------------------------------
+    // --------------------------------- FORMULARIO MODIFICAR RESOURCE ----------------------------------------
 
-    public function formularioModificarResource()
-    {
+    public function formularioModificarResource(){
         //if (Seguridad::haySesion()) {
             // Recuperamos los datos del libro a modificar
             $array = $this->resource->get($_REQUEST["idResource"]);
@@ -112,7 +113,7 @@ class ResourcesController{
         */
     }
 
-    // --------------------------------- MODIFICAR LIBROS ----------------------------------------
+    // --------------------------------- MODIFICAR RESOURCE ----------------------------------------
 
     public function modificarResource(){
 
@@ -141,7 +142,7 @@ class ResourcesController{
         */
     }
 
-    // --------------------------------- BUSCAR LIBROS ----------------------------------------
+    // --------------------------------- BUSCAR RESOURCE ----------------------------------------
 
     public function buscarLibros()
     {
