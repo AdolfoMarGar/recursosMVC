@@ -1,7 +1,7 @@
 <?php
 // VISTA PARA INSERCIÓN/EDICIÓN DE resourceS
 
-extract($data);   // Extrae el contenido de $data y lo convierte en variables individuales ($resource)
+extract($data);   // Extrae el contenido de $data y lo convierte en variables individuales  ej ($resource)
 
 // Vamos a usar la misma vista para insertar y modificar. Para saber si hacemos una cosa u otra,
 // usaremos la variable $resource: si existe, es porque estamos modificando un resource. Si no, estamos insertando uno nuevo.
@@ -14,10 +14,10 @@ if (isset($resource)) {
 // Sacamos los datos del resource (si existe) a variables individuales para mostrarlo en los inputs del formulario.
 // (Si no hay resource, dejamos los campos en blanco y el formulario servirá para inserción).
 $id = $resource->id ?? ""; 
-$nameRes = $resource->nameRes ?? "";
+$nameRes = $resource->name ?? "";
 $description = $resource->description ?? "";
 $location = $resource->location ?? "";
-$image = $resource->image ?? "";
+$image = $resource->image ?? null;
 
 // Creamos el formulario con los campos del resource
 echo "<form enctype='multipart/form-data' action = 'index.php' method = 'post'>
@@ -40,7 +40,8 @@ echo "<form enctype='multipart/form-data' action = 'index.php' method = 'post'>
         <td>
 
          ";
-        if ($image!="") {
+        if ($image!=null||$image!="") {
+            echo "<input type='hidden' name='image' value='".$image."'>";
             echo"<img src='" . $image . "' width='100' height='100'></br>";
         }
         echo"

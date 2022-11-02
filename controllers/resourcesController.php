@@ -52,11 +52,11 @@ class ResourcesController{
             $result = $this->resource->insert($nameRes, $description, $location, $image);
             if ($result == 1) {
                 
-                $data["info"] = "Libro insertado con éxito";
+                $data["info"] = "Recuros insertado con éxito.";
                
             } else {
                 // Si la inserción del libro ha fallado, mostramos mensaje de error
-                $data["error"] = "Error al insertar el libro";
+                $data["error"] = "Error al insertar el recurso.";
             }
             $data["listaResources"] = $this->resource->getAll();
             View::render("resource/all", $data);
@@ -93,49 +93,52 @@ class ResourcesController{
 
     // --------------------------------- FORMULARIO MODIFICAR LIBROS ----------------------------------------
 
-    public function formularioModificarLibro()
+    public function formularioModificarResource()
     {
-        if (Seguridad::haySesion()) {
+        //if (Seguridad::haySesion()) {
             // Recuperamos los datos del libro a modificar
-            $data["libro"] = $this->libro->get(Seguridad::limpiar($_REQUEST["idLibro"])[0]);
+            $array = $this->resource->get($_REQUEST["idResource"]);
+            $data["resource"] = $array[0];
+            
             // Renderizamos la vista de inserción de libros, pero enviándole los datos del libro recuperado.
             // Esa vista necesitará la lista de todos los autores y, además, la lista
             // de los autores de este libro en concreto.
-            $data["todosLosAutores"] = $this->autor->getAll();
-            $data["autoresLibro"] = $this->autor->getAutores(Seguridad::limpiar($_REQUEST["idLibro"]));
-            View::render("libro/form", $data);
+            View::render("resource/form", $data);
+            /*
         } else {
             $data["error"] = "No tienes permiso para eso";
             View::render("usuario/login", $data);
         }
+        */
     }
 
     // --------------------------------- MODIFICAR LIBROS ----------------------------------------
 
-    public function modificarLibro()
-    {
-        if (Seguridad::haySesion()) {
+    public function modificarResource(){
+
+        //if (Seguridad::haySesion()) {
             // Primero, recuperamos todos los datos del formulario
-            $idLibro = Seguridad::limpiar($_REQUEST["idLibro"]);
+            $id = Seguridad::limpiar($_REQUEST["id"]);
             $nameRes = Seguridad::limpiar($_REQUEST["nameRes"]);
             $description = Seguridad::limpiar($_REQUEST["description"]);
             $location = Seguridad::limpiar($_REQUEST["location"]);
-            $image = Seguridad::limpiar($_REQUEST["image"]);
+            $image = $this->resource->uploadImage() ?? $_REQUEST["image"];
 
             // Pedimos al modelo que haga el update
-            $result = $this->libro->update($idLibro, $nameRes, $description, $location, $image);
+            $result = $this->resource->update($id, $nameRes, $description, $location, $image);
             if ($result == 1) {
-                $data["info"] = "Libro actualizado con éxito";
+                $data["info"] = "Recurso actualizado con éxito";
             } else {
                 // Si la modificación del libro ha fallado, mostramos mensaje de error
-                $data["error"] = "Ha ocurrido un error al modificar el libro. Por favor, inténtelo más tarde";
+                $data["error"] = "Ha ocurrido un error al modificar el recurso. Por favor, inténtelo más tarde";
             }
-            $data["listaLibros"] = $this->libro->getAll();
-            View::render("libro/all", $data);
-        } else {
+            $data["listaResources"] = $this->resource->getAll();
+            View::render("resource/all", $data);
+        /*} else {
             $data["error"] = "No tienes permiso para eso";
             View::render("usuario/login", $data);
         }
+        */
     }
 
     // --------------------------------- BUSCAR LIBROS ----------------------------------------
