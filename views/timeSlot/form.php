@@ -23,16 +23,16 @@ echo "<form enctype='multipart/form-data' action = '/' method = 'post'>
         <table border ='1'>
         <input type='hidden' name='id' value='".$id."'>
         <tr>
-        <td>Nombre:</td>
+        <td>Dia de la semana:</td>
         <td><input type='text' name='dayOfWeek' value='".$dayOfWeek."'></td>
         </tr>
         <tr>
-        <td>Descripcion:</td>
-        <td><input type='text' name='startTime' value='".$startTime."'></td>
+        <td>Hora inicio:</td>
+        <td><input type='time' name='startTime' value='".$startTime."'></td>
         </tr>
         <tr>
-        <td>Localización:</td>
-        <td><input type='text' name='endTime' value='".$endTime."'></td>
+        <td>Hora fin:</td>
+        <td><input type='time' name='endTime' value='".$endTime."'></td>
         </tr>
        
         </table>
