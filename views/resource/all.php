@@ -37,4 +37,7 @@ if (count($listaResources) == 0) {
   }
   echo "</table>";
 }
-echo "<p><a href='index.php?action=formularioInsertarResources'>Nuevo</a></p>";
+echo "<form action = '/' method = 'post'>";
+echo '<button name="action" value="formularioInsertarResources">Nuevo</button>';
+
+echo "</form>";

@@ -20,7 +20,7 @@ $location = $resource->location ?? "";
 $image = $resource->image ?? null;
 
 // Creamos el formulario con los campos del resource
-echo "<form enctype='multipart/form-data' action = 'index.php' method = 'post'>
+echo "<form enctype='multipart/form-data' action = '/' method = 'post'>
         <table border ='1'>
         <input type='hidden' name='id' value='".$id."'>
         <tr>
@@ -59,7 +59,7 @@ if (isset($resource)) {
 } else {
     echo "  <input type='hidden' name='action' value='insertarResource'>";
 }
-echo '<button name="Inicio" role="link" onclick="window.location=\'/index.php\'">Inicio</button>';
+echo '<button name="action" value="mostrarListaResources"  >Inicio</button>';
 
 echo "	<input type='submit'></form>";
 
