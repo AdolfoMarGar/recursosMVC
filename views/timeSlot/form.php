@@ -6,9 +6,9 @@ extract($data);   // Extrae el contenido de $data y lo convierte en variables in
 // Vamos a usar la misma vista para insertar y modificar. Para saber si hacemos una cosa u otra,
 // usaremos la variable $resource: si existe, es porque estamos modificando un resource. Si no, estamos insertando uno nuevo.
 if (isset($timeSlot)) {   
-    echo "<h1>Modificación de recursos</h1>";
+    echo "<h1>Modificación de tramo horario</h1>";
 } else {
-    echo "<h1>Inserción de recursos</h1>";
+    echo "<h1>Inserción de tramo horario</h1>";
 }
 
 // Sacamos los datos del resource (si existe) a variables individuales para mostrarlo en los inputs del formulario.
@@ -20,11 +20,46 @@ $endTime = $timeSlot->endTime ?? "";
 
 // Creamos el formulario con los campos del resource
 echo "<form enctype='multipart/form-data' action = '/' method = 'post'>
-        <table border ='1'>
         <input type='hidden' name='id' value='".$id."'>
+        <table border ='1'>
         <tr>
         <td>Dia de la semana:</td>
-        <td><input type='text' name='dayOfWeek' value='".$dayOfWeek."'></td>
+        <td>
+        <select name='dayOfWeek'>
+        
+        <option";
+        if($dayOfWeek == 'Lunes'){
+            echo(" selected");
+        }
+        echo " value='Lunes'>Lunes</option>
+
+        <option";
+        if($dayOfWeek == 'Martes'){
+            echo(" selected");
+        }
+        echo " value='Martes'>Martes</option>
+
+        <option";
+        if($dayOfWeek == 'Miercoles'){
+            echo(" selected");
+        }
+        echo " value='Miercoles'>Miercoles</option>
+
+        <option";
+        if($dayOfWeek == 'Jueves'){
+            echo(" selected");
+        }
+        echo " value='Jueves'>Jueves</option>
+
+        <option";
+        if($dayOfWeek == 'Viernes'){
+            echo(" selected");
+        }
+        echo " value='Viernes'>Viernes</option>
+
+        
+        </select>
+        </td>
         </tr>
         <tr>
         <td>Hora inicio:</td>

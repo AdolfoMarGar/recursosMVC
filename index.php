@@ -11,19 +11,20 @@ foreach (glob("controllers/*.php") as $file){
 */
 include_once("controllers/resourcesController.php");
 include_once("controllers/timeSlotController.php");
+include_once("controllers/userController.php");
 
 // Miramos el valor de la variable "controller", si existe. Si no, le asignamos un controlador por defecto
 if (isset($_REQUEST["controller"])){
     $controller = $_REQUEST["controller"];
 }else{
-    $controller = "TimeSlotController";  // Controlador por defecto
+    $controller = "UserController";  // Controlador por defecto
 }
 
 // Miramos el valor de la variable "action", si existe. Si no, le asignamos una acción por defecto
 if (isset($_REQUEST["action"])) {
     $action = $_REQUEST["action"];
 } else {
-    $action = "mostrarListaTimeSlot";  // Acción por defecto
+    $action = "mostrarListaUser";  // Acción por defecto
 }
 
 // Creamos un objeto de tipo $controller y llamamos al método $action()
