@@ -148,23 +148,6 @@ class UserController{
 
     // --------------------------------- BUSCAR USER ----------------------------------------
 
-    //falta implementar un buscardor tanto en la vista como en el modelo User para que esto se pueda utilizar.
-    public function buscarUser(){
-        //if (Seguridad::haySesion()) {
-            // Recuperamos el texto de búsqueda de la variable de formulario
-            $textoBusqueda = Seguridad::limpiar($_REQUEST["textoBusqueda"]);
-            // Buscamos los libros que coinciden con la búsqueda
-            $data["listaUser"] = $this->user->search($textoBusqueda);
-            $data["info"] = "Resultados de la búsqueda: <i>$textoBusqueda</i>";
-            // Mostramos el resultado en la misma vista que la lista completa de libros
-            View::render("user/all", $data);
-        /*
-        } else {
-            $data["error"] = "No tienes permiso para eso";
-            View::render("usuario/login", $data);
-        }
-        */
-    }
 
 
 

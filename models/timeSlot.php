@@ -14,7 +14,7 @@ class TimeSlot extends Model{
     // Devuelve el último id asignado
     public function getMaxId()
     {
-        $result = $this->db->dataQuery("SELECT MAX(id) AS ultimoIdTimeSlot FROM timeSlot");
+        $result = $this->db->selectQuery("SELECT MAX(id) AS ultimoIdTimeSlot FROM timeSlot");
         return $result[0]->ultimoIdTimeSlot;
     }
 

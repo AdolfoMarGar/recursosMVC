@@ -14,7 +14,7 @@ class User extends Model{
     // Devuelve el último id asignado
     public function getMaxId()
     {
-        $result = $this->db->dataQuery("SELECT MAX(id) AS ultimoIdUser FROM user");
+        $result = $this->db->selectQuery("SELECT MAX(id) AS ultimoIdUser FROM user");
         return $result[0]->ultimoIdUser;
     }
 
@@ -34,7 +34,7 @@ class User extends Model{
             `password` = '$password', 
             `realname` = '$realname',
             `type` = '$type' 
-            WHERE `user`.`id` = $id; 
+            WHERE `users`.`id` = $id; 
             ");
         return $ok;
     }

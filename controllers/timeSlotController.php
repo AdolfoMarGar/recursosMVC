@@ -146,23 +146,7 @@ class TimeSlotController{
 
     // --------------------------------- BUSCAR TIMESLOT ----------------------------------------
 
-    //falta implementar un buscardor tanto en la vista como en el modelo TimeSlot para que esto se pueda utilizar.
-    public function buscarTimeSlot(){
-        //if (Seguridad::haySesion()) {
-            // Recuperamos el texto de búsqueda de la variable de formulario
-            $textoBusqueda = Seguridad::limpiar($_REQUEST["textoBusqueda"]);
-            // Buscamos los libros que coinciden con la búsqueda
-            $data["listaTimeSlot"] = $this->timeSlot->search($textoBusqueda);
-            $data["info"] = "Resultados de la búsqueda: <i>$textoBusqueda</i>";
-            // Mostramos el resultado en la misma vista que la lista completa de libros
-            View::render("timeSlot/all", $data);
-        /*
-        } else {
-            $data["error"] = "No tienes permiso para eso";
-            View::render("usuario/login", $data);
-        }
-        */
-    }
+  
 
 
 

@@ -148,23 +148,6 @@ class ResourcesController{
 
     // --------------------------------- BUSCAR RESOURCE ----------------------------------------
 
-    //falta implementar un buscardor tanto en la vista como en el modelo resources para que esto se pueda utilizar.
-    public function buscarResources(){
-        //if (Seguridad::haySesion()) {
-            // Recuperamos el texto de búsqueda de la variable de formulario
-            $textoBusqueda = Seguridad::limpiar($_REQUEST["textoBusqueda"]);
-            // Buscamos los libros que coinciden con la búsqueda
-            $data["listaResources"] = $this->libro->search($textoBusqueda);
-            $data["info"] = "Resultados de la búsqueda: <i>$textoBusqueda</i>";
-            // Mostramos el resultado en la misma vista que la lista completa de libros
-            View::render("libro/all", $data);
-        /*
-        } else {
-            $data["error"] = "No tienes permiso para eso";
-            View::render("usuario/login", $data);
-        }
-        */
-    }
 
 
 

@@ -14,7 +14,7 @@ class Resources extends Model{
     // Devuelve el último id asignado
     public function getMaxId()
     {
-        $result = $this->db->dataQuery("SELECT MAX(id) AS ultimoIdResources FROM resources");
+        $result = $this->db->selectQuery("SELECT MAX(id) AS ultimoIdResources FROM resources");
         return $result[0]->ultimoIdResources;
     }
 
