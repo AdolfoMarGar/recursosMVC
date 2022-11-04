@@ -31,13 +31,30 @@ if (count($listaUser) == 0) {
     echo "<td><p>" . $fila->password ."</p></td>";
     echo "<td>" . $fila->realname . "</td>";
     echo "<td>" . $fila->type . "</td>";
-    echo "<td><a href='index.php?action=formularioModificarUser&idUser=" . $fila->id . "'>Modificar</a>";
-    echo "</br></br><a href='index.php?action=borrarUser&idUser=" . $fila->id . "'>Borrar</a></td>";
+    
+    echo '<td>';
+
+    echo "<form action = '/' method = 'post'>";
+    echo "<input type='hidden' name='controller' value='UserController'>";
+    echo "<input type='hidden' name='idUser' value='".$fila->id."'>";
+    echo '<button name="action" value="formularioModificarUser">Modificar</button>';
+    echo "</form>";
+
+    echo "<form action = '/' method = 'post'>";
+    echo "<input type='hidden' name='controller' value='UserController'>";
+    echo "<input type='hidden' name='idUser' value='".$fila->id."'>";
+    echo '<button name="action" value="borrarUser">Borrar</button>';
+    echo "</form>";
+
+    echo'</td>';
+
     echo "</tr>";
   }
   echo "</table>";
 }
 echo "<form action = '/' method = 'post'>";
+echo "<input type='hidden' name='controller' value='UserController'>";
+
 echo '<button name="action" value="formularioInsertarUser">Nuevo</button>';
 
 echo "</form>";

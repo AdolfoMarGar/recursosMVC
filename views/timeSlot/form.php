@@ -20,6 +20,8 @@ $endTime = $timeSlot->endTime ?? "";
 
 // Creamos el formulario con los campos del resource
 echo "<form enctype='multipart/form-data' action = '/' method = 'post'>
+    <input type='hidden' name='controller' value='TimeSlotController'>
+
         <input type='hidden' name='id' value='".$id."'>
         <table border ='1'>
         <tr>

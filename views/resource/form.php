@@ -21,6 +21,8 @@ $image = $resource->image ?? null;
 
 // Creamos el formulario con los campos del resource
 echo "<form enctype='multipart/form-data' action = '/' method = 'post'>
+        <input type='hidden' name='controller' value='ResourcesController'>
+
         <table border ='1'>
         <input type='hidden' name='id' value='".$id."'>
         <tr>

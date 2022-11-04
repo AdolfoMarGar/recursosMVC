@@ -21,6 +21,8 @@ $type = $user->type ?? "user";
 
 // Creamos el formulario con los campos del resource
 echo "<form enctype='multipart/form-data' action = '/' method = 'post'>
+        <input type='hidden' name='controller' value='UserController'>
+
         <input type='hidden' name='id' value='".$id."'>
         <table border ='1'>
         

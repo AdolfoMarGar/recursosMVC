@@ -17,6 +17,7 @@ if (isset($data["error"])) {
 if (count($listaResources) == 0) {
   echo "No hay datos";
 } else {
+
   echo "<table border ='1'>";
   echo "<tr>";
   echo "<td>Nombre</td>";
@@ -31,13 +32,29 @@ if (count($listaResources) == 0) {
     echo "<td><p>" . $fila->description ."</p></td>";
     echo "<td>" . $fila->location . "</td>";
     echo "<td><img src='" . $fila->image . "' width='100' height='100'></td>";
-    echo "<td><a href='index.php?action=formularioModificarResource&idResource=" . $fila->id . "'>Modificar</a>";
-    echo "</br></br><a href='index.php?action=borrarResource&idResource=" . $fila->id . "'>Borrar</a></td>";
+
+    echo '<td>';
+
+    echo "<form action = '/' method = 'post'>";
+    echo "<input type='hidden' name='controller' value='ResourcesController'>";
+    echo "<input type='hidden' name='idResource' value='".$fila->id."'>";
+    echo '<button name="action" value="formularioModificarResource">Modificar</button>';
+    echo "</form>";
+
+    echo "<form action = '/' method = 'post'>";
+    echo "<input type='hidden' name='controller' value='ResourcesController'>";
+    echo "<input type='hidden' name='idResource' value='".$fila->id."'>";
+    echo '<button name="action" value="borrarResource">Borrar</button>';
+    echo "</form>";
+
+
+    echo'</td>';
     echo "</tr>";
   }
   echo "</table>";
 }
-echo "<form action = '/' method = 'post'>";
-echo '<button name="action" value="formularioInsertarResources">Nuevo</button>';
 
+echo "<form action = '/' method = 'post'>";
+echo "<input type='hidden' name='controller' value='ResourcesController'>";
+echo '<button name="action" value="formularioInsertarResources">Nuevo</button>';
 echo "</form>";

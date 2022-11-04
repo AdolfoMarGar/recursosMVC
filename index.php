@@ -9,7 +9,6 @@ foreach (glob("controllers/*.php") as $file){
     include $file;
 }
 */
-echo "Se incluye menucontrolless";
 
 include_once("controllers/menuController.php");
 include_once("controllers/resourcesController.php");
@@ -31,5 +30,5 @@ if (isset($_REQUEST["action"])) {
 }
 
 // Creamos un objeto de tipo $controller y llamamos al método $action()
-//$biblio = new $controller();
-//$biblio->$action();
+$biblio = new $controller();
+$biblio->$action();

@@ -29,13 +29,31 @@ if (count($listaTimeSlot) == 0) {
     echo "<td>" . $fila->dayOfWeek . "</td>";
     echo "<td><p>" . $fila->startTime ."</p></td>";
     echo "<td>" . $fila->endTime . "</td>";
-    echo "<td><a href='index.php?action=formularioModificarTimeSlot&idTimeSlot=" . $fila->id . "'>Modificar</a>";
-    echo "</br></br><a href='index.php?action=borrarTimeSlot&idTimeSlot=" . $fila->id . "'>Borrar</a></td>";
+    
+    
+    echo '<td>';
+
+    echo "<form action = '/' method = 'post'>";
+    echo "<input type='hidden' name='controller' value='TimeSlotController'>";
+    echo "<input type='hidden' name='idTimeSlot' value='".$fila->id."'>";
+    echo '<button name="action" value="formularioModificarTimeSlot">Modificar</button>';
+    echo "</form>";
+
+    echo "<form action = '/' method = 'post'>";
+    echo "<input type='hidden' name='controller' value='TimeSlotController'>";
+    echo "<input type='hidden' name='idTimeSlot' value='".$fila->id."'>";
+    echo '<button name="action" value="borrarTimeSlot">Borrar</button>';
+    echo "</form>";
+
+
+    echo'</td>';
+
     echo "</tr>";
   }
   echo "</table>";
 }
 echo "<form action = '/' method = 'post'>";
+echo "<input type='hidden' name='controller' value='TimeSlotController'>";
 echo '<button name="action" value="formularioInsertarTimeSlot">Nuevo</button>';
 
 echo "</form>";
