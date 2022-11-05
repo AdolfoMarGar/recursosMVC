@@ -146,6 +146,37 @@ class UserController{
         */
     }
 
+
+    // Muestra el formulario de login
+    public function formLogin() {
+        View::render("user/login");
+    }
+
+    // Comprueba los datos de login. Si son correctos, el modelo iniciará la sesión y
+    // desde aquí se redirige a otra vista. Si no, nos devuelve al formulario de login.
+    public function procesarFormLogin() {
+        $username = Seguridad::limpiar($_REQUEST["username"]);
+        $passwd = Seguridad::limpiar($_REQUEST["password"]);
+        $result = $this->user->login($username, $passwd);
+        if ($result) { 
+            header("Location: index.php?controller=MenuController&action=mostrarStartMenu");
+        } else {
+            $data["error"] = "Usuario o contraseña incorrectos";
+            View::render("user/login", $data);
+        }
+    }
+
+    // Cierra la sesión y nos lleva a la vista de login
+    public function cerrarSesion() {
+        $this->user->cerrarSesion();
+        $data["info"] = "Sesión cerrada con éxito";
+        View::render("user/login", $data);
+    }
+ 
+    
+
+
+
     // --------------------------------- BUSCAR USER ----------------------------------------
 
 

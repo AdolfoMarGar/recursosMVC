@@ -1,4 +1,6 @@
 <?php
+include_once("views/plantilla/nav.php");
+
 // VISTA PARA INSERCIÓN/EDICIÓN DE resourceS
 
 extract($data);   // Extrae el contenido de $data y lo convierte en variables individuales  ej ($resource)

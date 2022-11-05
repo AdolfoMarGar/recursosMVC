@@ -1,4 +1,6 @@
 <?php
+include_once("views/plantilla/nav.php");
+
 // VISTA PARA LA LISTA DE LIBROS
 
 // Recuperamos la lista de libros

@@ -39,5 +39,19 @@ class User extends Model{
         return $ok;
     }
 
+    public function login($username, $password) {
+        $array = $this->db->selectQuery("SELECT * FROM users WHERE username='$username' AND password='$password'");
+        if (count($array) == 1) {
+            Seguridad::iniciarSesion($array[0]->id);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // Cierra una sesión (destruye variables de sesión)
+    public function cerrarSesion() {
+        Seguridad::cerrarSesion();
+    }
 
 }
