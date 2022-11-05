@@ -9,42 +9,45 @@ include_once("views/view.php");        // Modelo base de View
 class ResourcesController{
     private $db;        // Conexión con la base de datos
     private $resource;  // Objeto del modelo resource para utilizar sus metodos
+    private $esAdmin;     
+
 
     public function __construct(){
         $this->resource = new Resources();  //Inicializamos el objeto resource
+        $this->esAdmin =Seguridad::esAdmin();
     }
 
     // --------------------------------- MOSTRAR LISTA DE RECURSOS ----------------------------------------
     public function mostrarListaResources(){
-        //if (Seguridad::haySesion()) {
+        if ($this->esAdmin==1) {
             $data["listaResources"] = $this->resource->getAll();  //Obtenemos un arraya con la totalidad de los elementos en la tabla recursos
             View::render("resource/all", $data);  //Llamamos a la vista resource/all y le pasamos los datos obtenidos.
-        /*} else {
+        } else {
             $data["error"] = "No tienes permiso para eso";
-            View::render("usuario/login", $data);
+            View::render("menu/start", $data);
         }
-        */
+        
     }
 
     // --------------------------------- FORMULARIO ALTA DE RECURSOS ----------------------------------------
 
     public function formularioInsertarResources(){
-        //if (Seguridad::haySesion()) {
+        if ($this->esAdmin==1) {
             $data["resource"]=null; //Le pasamos resource=null para que no de error al buscar en algo inexistente. Aunque no tenga valores al asignarle null
                                     //se le ha creado el espacio de memoria y nos ahorra problemas
             View::render("resource/form", $data);  //LLamamos a la vista formulario de resources
-        /*} else {
+        } else {
             $data["error"] = "No tienes permiso para eso";
-            View::render("usuario/login", $data);
+            View::render("menu/start", $data);
         }
-        */
+        
     }
 
     // --------------------------------- INSERTAR RESOURCE ----------------------------------------
 
     public function insertarResource(){
 
-       // if (Seguridad::haySesion()) {
+        if ($this->esAdmin==1) {
             // Primero, recuperamos todos los datos del formulario
             
             $nameRes = Seguridad::limpiar($_REQUEST["nameRes"]);
@@ -63,17 +66,17 @@ class ResourcesController{
             $data["listaResources"] = $this->resource->getAll();
             View::render("resource/all", $data);
             
-       /* } else {
+        } else {
             $data["error"] = "No tienes permiso para eso";
-            View::render("usuario/login", $data);
+            View::render("menu/start", $data);
         }
-        */
+        
     }
 
     // --------------------------------- BORRAR RESOURCE ----------------------------------------
 
     public function borrarResource(){
-        //if (Seguridad::haySesion()) {
+        if ($this->esAdmin==1) {
             // Obtenemos el id del recurso a borrar a traves del formulario
             $id = Seguridad::limpiar($_REQUEST["idResource"]);
             // Pedimos al modelo resource que intente borrarlo
@@ -87,18 +90,18 @@ class ResourcesController{
             //Volvemos a cargar todos los recursos
             $data["listaResources"] = $this->resource->getAll();
             View::render("resource/all", $data);
-            /*
+            
         } else {
             $data["error"] = "No tienes permiso para eso";
-            View::render("usuario/login", $data);
+            View::render("menu/start", $data);
         }
-        */
+        
     }
 
     // --------------------------------- FORMULARIO MODIFICAR RESOURCE ----------------------------------------
 
     public function formularioModificarResource(){
-        //if (Seguridad::haySesion()) {
+        if ($this->esAdmin==1) {
             // Recuperamos la id del libro a modificar y la asignamos a data
             $array = $this->resource->get($_REQUEST["idResource"]);
             $data["resource"] = $array[0];
@@ -106,19 +109,19 @@ class ResourcesController{
             // Renderizamos la vista de inserción de recursos, pero enviándole los datos del recurso ya obtenido en su totalidad.
             // La vista en si se encarga de utilizar los datos pasados para cargar el formulario y trabajar a partir de ahi
             View::render("resource/form", $data);
-            /*
+            
         } else {
             $data["error"] = "No tienes permiso para eso";
-            View::render("usuario/login", $data);
+            View::render("menu/start", $data);
         }
-        */
+        
     }
 
     // --------------------------------- MODIFICAR RESOURCE ----------------------------------------
 
     public function modificarResource(){
 
-        //if (Seguridad::haySesion()) {
+        if ($this->esAdmin==1) {
             // Primero, recuperamos todos los datos del formulario
 
             //Recuperamos los datos del formulario.
@@ -139,11 +142,11 @@ class ResourcesController{
             //Y volvemos a cargar la vista inicial
             $data["listaResources"] = $this->resource->getAll();
             View::render("resource/all", $data);
-        /*} else {
+        } else {
             $data["error"] = "No tienes permiso para eso";
-            View::render("usuario/login", $data);
+            View::render("menu/start", $data);
         }
-        */
+        
     }
 
     // --------------------------------- BUSCAR RESOURCE ----------------------------------------

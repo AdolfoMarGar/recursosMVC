@@ -11,8 +11,9 @@
 class Seguridad {
 
     // Abre una sesión y guarda el id del usuario
-    public static function iniciarSesion($id) {
+    public static function iniciarSesion($id,$type) {
         $_SESSION["idUsuario"] = $id;
+        $_SESSION["tipoUsuario"] = $type;
     }
 
     // Cierra una sesión y elimina el id del usuario
@@ -36,6 +37,14 @@ class Seguridad {
         }
         else {
             return false;
+        }
+    }
+
+    public static function esAdmin() {
+        if ($_SESSION["tipoUsuario"]=="admin") {
+            return 1;
+        }else {
+            return 0;
         }
     }
 

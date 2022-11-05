@@ -9,42 +9,46 @@ include_once("views/view.php");         // Modelo base de View
 class UserController{
     private $db;        // Conexión con la base de datos
     private $user;  // Objeto del modelo User para utilizar sus metodos
+    private $esAdmin;     
+
 
     public function __construct(){
         $this->user = new User();  //Inicializamos el objeto User
+        $this->esAdmin =Seguridad::esAdmin();
+
     }
 
     // --------------------------------- MOSTRAR LISTA DE RECURSOS ----------------------------------------
     public function mostrarListaUser(){
-        //if (Seguridad::haySesion()) {
+        if ($this->esAdmin==1) {
             $data["listaUser"] = $this->user->getAll();  //Obtenemos un arraya con la totalidad de los elementos en la tabla recursos
             View::render("user/all", $data);  //Llamamos a la vista User/all y le pasamos los datos obtenidos.
-        /*} else {
+        } else {
             $data["error"] = "No tienes permiso para eso";
-            View::render("usuario/login", $data);
+            View::render("menu/start", $data);
         }
-        */
+        
     }
 
     // --------------------------------- FORMULARIO ALTA DE RECURSOS ----------------------------------------
 
     public function formularioInsertarUser(){
-        //if (Seguridad::haySesion()) {
+        if ($this->esAdmin==1) {
             $data["user"]=null; //Le pasamos User=null para que no de error al buscar en algo inexistente. Aunque no tenga valores al asignarle null
                                     //se le ha creado el espacio de memoria y nos ahorra problemas
             View::render("user/form", $data);  //LLamamos a la vista formulario de User
-        /*} else {
+        } else {
             $data["error"] = "No tienes permiso para eso";
-            View::render("usuario/login", $data);
+            View::render("menu/start", $data);
         }
-        */
+        
     }
 
     // --------------------------------- INSERTAR USER ----------------------------------------
 
     public function insertarUser(){
 
-       // if (Seguridad::haySesion()) {
+        if ($this->esAdmin==1) {
             // Primero, recuperamos todos los datos del formulario
             
             $username = Seguridad::limpiar($_REQUEST["username"]);
@@ -63,17 +67,17 @@ class UserController{
             $data["listaUser"] = $this->user->getAll();
             View::render("user/all", $data);
             
-       /* } else {
+        } else {
             $data["error"] = "No tienes permiso para eso";
-            View::render("usuario/login", $data);
+            View::render("menu/start", $data);
         }
-        */
+        
     }
 
     // --------------------------------- BORRAR USER ----------------------------------------
 
     public function borrarUser(){
-        //if (Seguridad::haySesion()) {
+        if ($this->esAdmin==1) {
             // Obtenemos el id del recurso a borrar a traves del formulario
             $id = Seguridad::limpiar($_REQUEST["idUser"]);
             // Pedimos al modelo user que intente borrarlo
@@ -87,18 +91,18 @@ class UserController{
             //Volvemos a cargar todos los recursos
             $data["listaUser"] = $this->user->getAll();
             View::render("user/all", $data);
-            /*
+            
         } else {
             $data["error"] = "No tienes permiso para eso";
-            View::render("usuario/login", $data);
+            View::render("menu/start", $data);
         }
-        */
+        
     }
 
     // --------------------------------- FORMULARIO MODIFICAR USER ----------------------------------------
 
     public function formularioModificarUser(){
-        //if (Seguridad::haySesion()) {
+        if ($this->esAdmin==1) {
             // Recuperamos la id del libro a modificar y la asignamos a data
             $array = $this->user->get($_REQUEST["idUser"]);
             $data["user"] = $array[0];
@@ -106,19 +110,19 @@ class UserController{
             // Renderizamos la vista de inserción de recursos, pero enviándole los datos del recurso ya obtenido en su totalidad.
             // La vista en si se encarga de utilizar los datos pasados para cargar el formulario y trabajar a partir de ahi
             View::render("user/form", $data);
-            /*
+            
         } else {
             $data["error"] = "No tienes permiso para eso";
-            View::render("usuario/login", $data);
+            View::render("menu/start", $data);
         }
-        */
+        
     }
 
     // --------------------------------- MODIFICAR USER ----------------------------------------
 
     public function modificarUser(){
 
-        //if (Seguridad::haySesion()) {
+        if ($this->esAdmin==1) {
             // Primero, recuperamos todos los datos del formulario
 
             //Recuperamos los datos del formulario.
@@ -139,11 +143,11 @@ class UserController{
             //Y volvemos a cargar la vista inicial
             $data["listaUser"] = $this->user->getAll();
             View::render("user/all", $data);
-        /*} else {
+        } else {
             $data["error"] = "No tienes permiso para eso";
-            View::render("usuario/login", $data);
+            View::render("menu/start", $data);
         }
-        */
+        
     }
 
 

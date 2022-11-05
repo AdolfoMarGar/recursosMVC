@@ -9,42 +9,44 @@ include_once("views/view.php");        // Modelo base de View
 class TimeSlotController{
     private $db;        // Conexión con la base de datos
     private $timeSlot;  // Objeto del modelo TimeSlot para utilizar sus metodos
+    private $esAdmin;     
 
     public function __construct(){
         $this->timeSlot = new TimeSlot();  //Inicializamos el objeto TimeSlot
+        $this->esAdmin =Seguridad::esAdmin();
     }
 
     // --------------------------------- MOSTRAR LISTA DE RECURSOS ----------------------------------------
     public function mostrarListaTimeSlot(){
-        //if (Seguridad::haySesion()) {
+        if ($this->esAdmin==1) {
             $data["listaTimeSlot"] = $this->timeSlot->getAll();  //Obtenemos un arraya con la totalidad de los elementos en la tabla recursos
             View::render("timeSlot/all", $data);  //Llamamos a la vista TimeSlot/all y le pasamos los datos obtenidos.
-        /*} else {
+        } else {
             $data["error"] = "No tienes permiso para eso";
-            View::render("usuario/login", $data);
+            View::render("menu/start", $data);
         }
-        */
+        
     }
 
     // --------------------------------- FORMULARIO ALTA DE RECURSOS ----------------------------------------
 
     public function formularioInsertarTimeSlot(){
-        //if (Seguridad::haySesion()) {
+        if ($this->esAdmin==1) {
             $data["timeSlot"]=null; //Le pasamos TimeSlot=null para que no de error al buscar en algo inexistente. Aunque no tenga valores al asignarle null
                                     //se le ha creado el espacio de memoria y nos ahorra problemas
             View::render("timeSlot/form", $data);  //LLamamos a la vista formulario de TimeSlot
-        /*} else {
+        } else {
             $data["error"] = "No tienes permiso para eso";
-            View::render("usuario/login", $data);
+            View::render("menu/start", $data);
         }
-        */
+        
     }
 
     // --------------------------------- INSERTAR TIMESLOT ----------------------------------------
 
     public function insertarTimeSlot(){
 
-       // if (Seguridad::haySesion()) {
+        if ($this->esAdmin==1) {
             // Primero, recuperamos todos los datos del formulario
             
             $dayOfWeek = Seguridad::limpiar($_REQUEST["dayOfWeek"]);
@@ -62,17 +64,17 @@ class TimeSlotController{
             $data["listaTimeSlot"] = $this->timeSlot->getAll();
             View::render("timeSlot/all", $data);
             
-       /* } else {
+        } else {
             $data["error"] = "No tienes permiso para eso";
-            View::render("usuario/login", $data);
+            View::render("menu/start", $data);
         }
-        */
+        
     }
 
     // --------------------------------- BORRAR TIMESLOT ----------------------------------------
 
     public function borrarTimeSlot(){
-        //if (Seguridad::haySesion()) {
+        if ($this->esAdmin==1) {
             // Obtenemos el id del recurso a borrar a traves del formulario
             $id = Seguridad::limpiar($_REQUEST["idTimeSlot"]);
             // Pedimos al modelo timeSlot que intente borrarlo
@@ -86,18 +88,18 @@ class TimeSlotController{
             //Volvemos a cargar todos los recursos
             $data["listaTimeSlot"] = $this->timeSlot->getAll();
             View::render("timeSlot/all", $data);
-            /*
+            
         } else {
             $data["error"] = "No tienes permiso para eso";
-            View::render("usuario/login", $data);
+            View::render("menu/start", $data);
         }
-        */
+        
     }
 
     // --------------------------------- FORMULARIO MODIFICAR TIMESLOT ----------------------------------------
 
     public function formularioModificarTimeSlot(){
-        //if (Seguridad::haySesion()) {
+        if ($this->esAdmin==1) {
             // Recuperamos la id del libro a modificar y la asignamos a data
             $array = $this->timeSlot->get($_REQUEST["idTimeSlot"]);
             $data["timeSlot"] = $array[0];
@@ -105,19 +107,19 @@ class TimeSlotController{
             // Renderizamos la vista de inserción de recursos, pero enviándole los datos del recurso ya obtenido en su totalidad.
             // La vista en si se encarga de utilizar los datos pasados para cargar el formulario y trabajar a partir de ahi
             View::render("timeSlot/form", $data);
-            /*
+            
         } else {
             $data["error"] = "No tienes permiso para eso";
-            View::render("usuario/login", $data);
+            View::render("menu/start", $data);
         }
-        */
+        
     }
 
     // --------------------------------- MODIFICAR TIMESLOT ----------------------------------------
 
     public function modificarTimeSlot(){
 
-        //if (Seguridad::haySesion()) {
+        if ($this->esAdmin==1) {
             // Primero, recuperamos todos los datos del formulario
 
             //Recuperamos los datos del formulario.
@@ -137,11 +139,11 @@ class TimeSlotController{
             //Y volvemos a cargar la vista inicial
             $data["listaTimeSlot"] = $this->timeSlot->getAll();
             View::render("timeSlot/all", $data);
-        /*} else {
+        } else {
             $data["error"] = "No tienes permiso para eso";
-            View::render("usuario/login", $data);
+            View::render("menu/start", $data);
         }
-        */
+        
     }
 
     // --------------------------------- BUSCAR TIMESLOT ----------------------------------------

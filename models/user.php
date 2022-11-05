@@ -42,7 +42,8 @@ class User extends Model{
     public function login($username, $password) {
         $array = $this->db->selectQuery("SELECT * FROM users WHERE username='$username' AND password='$password'");
         if (count($array) == 1) {
-            Seguridad::iniciarSesion($array[0]->id);
+            Seguridad::iniciarSesion($array[0]->id,$array[0]->type);
+            
             return true;
         } else {
             return false;
