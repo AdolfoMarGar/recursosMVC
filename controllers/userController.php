@@ -8,11 +8,13 @@ include_once("views/view.php");         // Modelo base de View
 
 class UserController{
     private $user;  // Objeto del modelo User para utilizar sus metodos
+    private $reservation;  // Objeto del modelo User para utilizar sus metodos
     private $esAdmin;     
 
 
     public function __construct(){
         $this->user = new User();  //Inicializamos el objeto User
+        $this->reservation = new Reservations();  //Inicializamos el objeto User
         $this->esAdmin =Seguridad::esAdmin();
 
     }
@@ -80,6 +82,7 @@ class UserController{
             // Obtenemos el id del recurso a borrar a traves del formulario
             $id = Seguridad::limpiar($_REQUEST["idUser"]);
             // Pedimos al modelo user que intente borrarlo
+            $this->reservation->deleteFromUser($id);
             $result = $this->user->delete($id);
             // Comprobamos si el borrado ha tenido éxito segun la respuesta de la db
             if ($result == 0) {

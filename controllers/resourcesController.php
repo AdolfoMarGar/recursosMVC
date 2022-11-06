@@ -8,11 +8,13 @@ include_once("views/view.php");        // Modelo base de View
 
 class ResourcesController{
     private $resource;  // Objeto del modelo resource para utilizar sus metodos
+    private $reservation;  // Objeto del modelo resource para utilizar sus metodos
     private $esAdmin;     
 
 
     public function __construct(){
         $this->resource = new Resources();  //Inicializamos el objeto resource
+        $this->reservation = new Reservations();  //Inicializamos el objeto resource
         $this->esAdmin =Seguridad::esAdmin();
     }
 
@@ -80,6 +82,7 @@ class ResourcesController{
             $id = Seguridad::limpiar($_REQUEST["idResource"]);
             // Pedimos al modelo resource que intente borrarlo
             $result = $this->resource->delete($id);
+            $result = $this->reservation->deleteFromResources($id);            
             // Comprobamos si el borrado ha tenido éxito segun la respuesta de la db
             if ($result == 0) {
                 $data["error"] = "Ha ocurrido un error al borrar el recurso. Por favor, inténtelo de nuevo";

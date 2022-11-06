@@ -40,5 +40,34 @@ class Reservations extends Model{
         return $ok;
     }
 
+    public function deleteFromResources($id) {
+        $result = $this->db->dataManipulation("DELETE FROM ".$this->table." WHERE idResource = $id");
+        return $result;
+      }
+
+    public function getIdResources($id) {
+        $sql = 'SELECT * FROM `reservations` WHERE `idResource` = '.$id.';';
+        $result = $this->db->selectQuery($sql);
+        return $result;
+    }
+
+    public function deleteFromUser($id) {
+    $result = $this->db->dataManipulation("DELETE FROM ".$this->table." WHERE idUser = $id");
+    return $result;
+    }
+    public function deleteFromTimeSlot($id) {
+        $result = $this->db->dataManipulation("DELETE FROM ".$this->table." WHERE idTimeSlot = $id");
+        return $result;
+    }
+
+    /*
+    public function getSinOcupados($idResource, $idTimeSlot){
+        $sql ="SELECT * FROM `reservations` WHERE NOT(`idResource`='".$idResource."'and `idTimeSlot`=".$idTimeSlot."); ";
+        $result = $this->db->selectQuery($sql);
+        return $result;
+
+    }
+    */
+
 
 }

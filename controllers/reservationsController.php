@@ -30,15 +30,14 @@ class ReservationsController{
             $listaUser = array();
             $listaTimeSlot = array();
             $listaReservations = $this->reservation->getAll();  //Obtenemos un arraya con la totalidad de los elementos en la tabla recursos
-            for ($i=0; $i< count($listaReservations)  ; $i++) { 
-                $fila = $listaReservations[$i];
-                array_push($listaResources, $this->resource->get($fila->idResource));
-                array_push($listaUser,  $this->user->get($fila->idUser));
-                array_push($listaTimeSlot,  $this->timeSlot->get($fila->idTimeSlot)); 
+            foreach($listaReservations as $fila){
+                $listaResources[]=$this->resource->get($fila->idResource);
+                $listaUser[]=$this->user->get($fila->idUser);
+                $listaTimeSlot[]=$this->timeSlot->get($fila->idTimeSlot);
             }
             
-            
             $data["listaResources"] = $listaResources;
+            $data["listaReservations"] = $listaReservations;
             $data["listaUser"] = $listaUser;
             $data["listaTimeSlot"] = $listaTimeSlot;
             View::render("reservation/all", $data);  //Llamamos a la vista reservation/all y le pasamos los datos obtenidos.
@@ -46,7 +45,6 @@ class ReservationsController{
             $data["error"] = "No tienes permiso para eso";
             View::render("menu/start", $data);
         }
-        
     }
 
     // --------------------------------- FORMULARIO ALTA DE RECURSOS ----------------------------------------
@@ -63,6 +61,67 @@ class ReservationsController{
         
     }
 
+    public function selectResources(){
+
+        if ($this->esAdmin==1) {
+            // Primero, recuperamos todos los datos del formulario
+            $listaResources = array();
+            $listaResources = $this->resource->getAll();  //Obtenemos un arraya con la totalidad de los elementos en la tabla recursos
+            
+            $data["listaResources"] = $listaResources;
+            View::render("reservation/selectResource", $data);
+            
+        } else {
+            $data["error"] = "No tienes permiso para eso";
+            View::render("menu/start", $data);
+        }
+        
+    }
+
+    public function selectTimeSlot(){
+
+        if ($this->esAdmin==1) {
+            // Primero, recuperamos todos los datos del formulario
+            $listaTimeSlot = array();
+            $listaReservations = $this->reservation->getIdResources($_REQUEST["idResource"]);  //Obtenemos un arraya con la totalidad de los elementos en la tabla recursos
+
+            if(count($listaReservations)==0){
+                $listaTimeSlot = $this->timeSlot->getAll();
+            }else{
+                foreach($listaReservations as $fila){
+                    $listaTimeSlot= $this->timeSlot->getSinOcupados($fila->idTimeSlot);
+
+                }
+
+            }
+          
+            $data["listaTimeSlot"] = $listaTimeSlot;
+            View::render("reservation/selectTimeSlot", $data);
+            
+        } else {
+            $data["error"] = "No tienes permiso para eso";
+            View::render("menu/start", $data);
+        }
+        
+    }
+
+    public function resume(){
+
+        if ($this->esAdmin==1) {
+            // Primero, recuperamos todos los datos del formulario
+            
+            $data["TimeSlot"] = $this->timeSlot->get($_REQUEST["idTimeSlot"]);
+            $data["Resource"] = $this->resource->get($_REQUEST["idResource"]);
+            View::render("reservation/resume", $data);
+            
+        } else {
+            $data["error"] = "No tienes permiso para eso";
+            View::render("menu/start", $data);
+        }
+        
+    }
+
+
     // --------------------------------- INSERTAR RESOURCE ----------------------------------------
 
     public function insertarReservation(){
@@ -70,12 +129,15 @@ class ReservationsController{
         if ($this->esAdmin==1) {
             // Primero, recuperamos todos los datos del formulario
             
-            $idReservation = Seguridad::limpiar($_REQUEST["idReservation"]);
-            $idUser = Seguridad::limpiar($_REQUEST["idUser"]);
+            $idResource = Seguridad::limpiar($_REQUEST["idResource"]);
+            $idUser = $_SESSION["idUsuario"];
             $idTimeSlot = Seguridad::limpiar($_REQUEST["idTimeSlot"]);
-            $date = Seguridad::limpiar($_REQUEST["date"]);
+            $date = $_REQUEST["date"];
+            if($date==""||$date==null){
+                $date = date('Y/m/d', time());
+            } 
             $remark = Seguridad::limpiar($_REQUEST["remark"]);
-            $result = $this->reservation->insert($idReservation, $idUser, $idTimeSlot, $date, $remark); //Se ejecuta un insert a la db a traves del modelo resources
+            $result = $this->reservation->insert($idResource, $idUser, $idTimeSlot, $date, $remark); //Se ejecuta un insert a la db a traves del modelo resources
             if ($result == 1) {
                 $data["info"] = "Recuros insertado con éxito.";
             } else {
@@ -84,8 +146,21 @@ class ReservationsController{
             //Segun la respuesta de la db indicamos si se ha realizado el insert correctamente o no.
 
             //Vovlemos a cargar la vista principal de resources
-            $data["listaReservations"] = $this->reservation->getAll();
-            View::render("reservation/all", $data);
+            $listaResources = array();
+            $listaUser = array();
+            $listaTimeSlot = array();
+            $listaReservations = $this->reservation->getAll();  //Obtenemos un arraya con la totalidad de los elementos en la tabla recursos
+            foreach($listaReservations as $fila){
+                $listaResources[]=$this->resource->get($fila->idResource);
+                $listaUser[]=$this->user->get($fila->idUser);
+                $listaTimeSlot[]=$this->timeSlot->get($fila->idTimeSlot);
+            }
+            
+            $data["listaResources"] = $listaResources;
+            $data["listaReservations"] = $listaReservations;
+            $data["listaUser"] = $listaUser;
+            $data["listaTimeSlot"] = $listaTimeSlot;
+            View::render("reservation/all", $data);  //Llamamos a la vista reservation/all y le pasamos los datos obtenidos.
             
         } else {
             $data["error"] = "No tienes permiso para eso";

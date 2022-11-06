@@ -6,6 +6,7 @@ include_once("views/plantilla/nav.php");
 $listaResources = $data["listaResources"];
 $listaUser = $data["listaUser"];
 $listaTimeSlot = $data["listaTimeSlot"];
+$listaReservations = $data["listaReservations"];
 
 // Si hay algún mensaje de feedback, lo mostramos
 if (isset($data["info"])) {
@@ -26,6 +27,7 @@ if (count($listaResources) == 0) {
   echo "<td>Recurso</td>";
   echo "<td>Tramo horario</td>";
   echo "<td>Usuario</td>";
+  echo "<td>Comentario</td>";
   echo "<tr>";
   for ($i=0; $i < count($data["listaResources"]); $i++){
     echo "<tr>";
@@ -50,6 +52,11 @@ if (count($listaResources) == 0) {
     echo "Nombre:</br>";
     echo $listaUser[$i][0]->realname ;
     echo"</td>";
+   
+
+    echo "<td>";
+    echo $listaReservations[$i]->remark ;
+    echo"</td>";
     echo "</tr>";
   }
   echo "</table>";
@@ -57,5 +64,5 @@ if (count($listaResources) == 0) {
 
 echo "<form action = '/' method = 'post'>";
 echo "<input type='hidden' name='controller' value='ReservationsController'>";
-echo '<button name="action" value="formularioInsertarReservations">Nuevo</button>';
+echo '<button name="action" value="selectResources">Nuevo</button>';
 echo "</form>";

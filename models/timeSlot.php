@@ -38,5 +38,11 @@ class TimeSlot extends Model{
         return $ok;
     }
 
+    public function getSinOcupados($id){
+        $sql ="SELECT * FROM `timeSlot` WHERE NOT(`id`='".$id."'); ";
+        $result = $this->db->selectQuery($sql);
+        
+        return $result;
+    }
 
 }

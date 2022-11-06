@@ -8,10 +8,12 @@ include_once("views/view.php");        // Modelo base de View
 
 class TimeSlotController{
     private $timeSlot;  // Objeto del modelo TimeSlot para utilizar sus metodos
+    private $reservation;  // Objeto del modelo TimeSlot para utilizar sus metodos
     private $esAdmin;     
 
     public function __construct(){
         $this->timeSlot = new TimeSlot();  //Inicializamos el objeto TimeSlot
+        $this->reservation = new Reservations();  //Inicializamos el objeto TimeSlot
         $this->esAdmin =Seguridad::esAdmin();
     }
 
@@ -77,6 +79,7 @@ class TimeSlotController{
             // Obtenemos el id del recurso a borrar a traves del formulario
             $id = Seguridad::limpiar($_REQUEST["idTimeSlot"]);
             // Pedimos al modelo timeSlot que intente borrarlo
+            $this->reservation ->deleteFromTimeSlot($id);
             $result = $this->timeSlot->delete($id);
             // Comprobamos si el borrado ha tenido éxito segun la respuesta de la db
             if ($result == 0) {
