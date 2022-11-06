@@ -10,7 +10,7 @@ if(Seguridad::esAdmin()==1){
   echo "<a href='index.php?action=mostrarListaTimeSlot&controller=TimeSlotController'>Tramos horarios</a></br></br>";
   echo "<a href='index.php?action=mostrarListaUser&controller=UserController'>Usuarios</a></br></br>";
 }
-echo "<a href='index.php?action=mostrarListaUser&controller=UserController'>Reservas</a></br></br>";
+echo "<a href='index.php?action=mostrarListaReservations&controller=ReservationsController'>Reservas</a></br></br>";
 echo "<a href='index.php?action=cerrarSesion&controller=UserController'>LogOut</a></br></br><h2></div>";
 
 

@@ -7,7 +7,6 @@ include_once("models/seguridad.php");  // Modelo de seguridad
 include_once("views/view.php");        // Modelo base de View
 
 class TimeSlotController{
-    private $db;        // Conexión con la base de datos
     private $timeSlot;  // Objeto del modelo TimeSlot para utilizar sus metodos
     private $esAdmin;     
 

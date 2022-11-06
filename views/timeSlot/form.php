@@ -85,7 +85,7 @@ if (isset($timeSlot)) {
 } else {
     echo "  <input type='hidden' name='action' value='insertarTimeSlot'>";
 }
-echo '<button name="action" value="mostrarListaTimeSlot"  >Inicio</button>';
+echo '<button name="action" value="mostrarListaTimeSlot"  >Volver</button>';
 
 echo "	<input type='submit'></form>";
 

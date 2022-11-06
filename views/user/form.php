@@ -71,7 +71,7 @@ if (isset($user)) {
 } else {
     echo "  <input type='hidden' name='action' value='insertarUser'>";
 }
-echo '<button name="action" value="mostrarListaUser"  >Inicio</button>';
+echo '<button name="action" value="mostrarListaUser"  >Volver</button>';
 
 echo "	<input type='submit'></form>";
 

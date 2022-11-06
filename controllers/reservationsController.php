@@ -2,25 +2,46 @@
 //Falta implementar la capa de seguridad.
 
 // CONTROLADOR DE RESOURCES
-include_once("models/resources.php");  // Modelo de resources
+include_once("models/reservations.php");  // Modelo de resources
 include_once("models/seguridad.php");  // Modelo de seguridad
 include_once("views/view.php");        // Modelo base de View
 
-class ResourcesController{
-    private $resource;  // Objeto del modelo resource para utilizar sus metodos
+class ReservationsController{
+    private $reservation;  // Objeto del modelo reservation para utilizar sus metodos
+    private $resource;  // Objeto del modelo reservation para utilizar sus metodos
+    private $user;  // Objeto del modelo reservation para utilizar sus metodos
+    private $timeSlot;  // Objeto del modelo reservation para utilizar sus metodos
     private $esAdmin;     
 
 
     public function __construct(){
-        $this->resource = new Resources();  //Inicializamos el objeto resource
+        $this->reservation = new Reservations();  //Inicializamos el objeto reservation
+        $this->resource = new Resources();  //Inicializamos el objeto reservation
+        $this->user = new User();  //Inicializamos el objeto reservation
+        $this->timeSlot = new TimeSlot();  //Inicializamos el objeto reservation
         $this->esAdmin =Seguridad::esAdmin();
+        
     }
-
+    
     // --------------------------------- MOSTRAR LISTA DE RECURSOS ----------------------------------------
-    public function mostrarListaResources(){
+    public function mostrarListaReservations(){
         if ($this->esAdmin==1) {
-            $data["listaResources"] = $this->resource->getAll();  //Obtenemos un arraya con la totalidad de los elementos en la tabla recursos
-            View::render("resource/all", $data);  //Llamamos a la vista resource/all y le pasamos los datos obtenidos.
+            $listaResources = array();
+            $listaUser = array();
+            $listaTimeSlot = array();
+            $listaReservations = $this->reservation->getAll();  //Obtenemos un arraya con la totalidad de los elementos en la tabla recursos
+            for ($i=0; $i< count($listaReservations)  ; $i++) { 
+                $fila = $listaReservations[$i];
+                array_push($listaResources, $this->resource->get($fila->idResource));
+                array_push($listaUser,  $this->user->get($fila->idUser));
+                array_push($listaTimeSlot,  $this->timeSlot->get($fila->idTimeSlot)); 
+            }
+            
+            
+            $data["listaResources"] = $listaResources;
+            $data["listaUser"] = $listaUser;
+            $data["listaTimeSlot"] = $listaTimeSlot;
+            View::render("reservation/all", $data);  //Llamamos a la vista reservation/all y le pasamos los datos obtenidos.
         } else {
             $data["error"] = "No tienes permiso para eso";
             View::render("menu/start", $data);
@@ -30,11 +51,11 @@ class ResourcesController{
 
     // --------------------------------- FORMULARIO ALTA DE RECURSOS ----------------------------------------
 
-    public function formularioInsertarResources(){
+    public function formularioInsertarReservations(){
         if ($this->esAdmin==1) {
-            $data["resource"]=null; //Le pasamos resource=null para que no de error al buscar en algo inexistente. Aunque no tenga valores al asignarle null
+            $data["reservation"]=null; //Le pasamos reservation=null para que no de error al buscar en algo inexistente. Aunque no tenga valores al asignarle null
                                     //se le ha creado el espacio de memoria y nos ahorra problemas
-            View::render("resource/form", $data);  //LLamamos a la vista formulario de resources
+            View::render("reservation/form", $data);  //LLamamos a la vista formulario de resources
         } else {
             $data["error"] = "No tienes permiso para eso";
             View::render("menu/start", $data);
@@ -44,16 +65,17 @@ class ResourcesController{
 
     // --------------------------------- INSERTAR RESOURCE ----------------------------------------
 
-    public function insertarResource(){
+    public function insertarReservation(){
 
         if ($this->esAdmin==1) {
             // Primero, recuperamos todos los datos del formulario
             
-            $nameRes = Seguridad::limpiar($_REQUEST["nameRes"]);
-            $description = Seguridad::limpiar($_REQUEST["description"]);
-            $location = Seguridad::limpiar($_REQUEST["location"]);
-            $image = $this->resource->uploadImage() ?? "";       //Se le asigna "" si no se sube ninguna imagen.      
-            $result = $this->resource->insert($nameRes, $description, $location, $image); //Se ejecuta un insert a la db a traves del modelo resources
+            $idReservation = Seguridad::limpiar($_REQUEST["idReservation"]);
+            $idUser = Seguridad::limpiar($_REQUEST["idUser"]);
+            $idTimeSlot = Seguridad::limpiar($_REQUEST["idTimeSlot"]);
+            $date = Seguridad::limpiar($_REQUEST["date"]);
+            $remark = Seguridad::limpiar($_REQUEST["remark"]);
+            $result = $this->reservation->insert($idReservation, $idUser, $idTimeSlot, $date, $remark); //Se ejecuta un insert a la db a traves del modelo resources
             if ($result == 1) {
                 $data["info"] = "Recuros insertado con éxito.";
             } else {
@@ -62,8 +84,8 @@ class ResourcesController{
             //Segun la respuesta de la db indicamos si se ha realizado el insert correctamente o no.
 
             //Vovlemos a cargar la vista principal de resources
-            $data["listaResources"] = $this->resource->getAll();
-            View::render("resource/all", $data);
+            $data["listaReservations"] = $this->reservation->getAll();
+            View::render("reservation/all", $data);
             
         } else {
             $data["error"] = "No tienes permiso para eso";
@@ -74,12 +96,12 @@ class ResourcesController{
 
     // --------------------------------- BORRAR RESOURCE ----------------------------------------
 
-    public function borrarResource(){
+    public function borrarReservation(){
         if ($this->esAdmin==1) {
             // Obtenemos el id del recurso a borrar a traves del formulario
-            $id = Seguridad::limpiar($_REQUEST["idResource"]);
-            // Pedimos al modelo resource que intente borrarlo
-            $result = $this->resource->delete($id);
+            $id = Seguridad::limpiar($_REQUEST["idReservation"]);
+            // Pedimos al modelo reservation que intente borrarlo
+            $result = $this->reservation->delete($id);
             // Comprobamos si el borrado ha tenido éxito segun la respuesta de la db
             if ($result == 0) {
                 $data["error"] = "Ha ocurrido un error al borrar el recurso. Por favor, inténtelo de nuevo";
@@ -87,8 +109,8 @@ class ResourcesController{
                 $data["info"] = "Recurso borrado con éxito";
             }
             //Volvemos a cargar todos los recursos
-            $data["listaResources"] = $this->resource->getAll();
-            View::render("resource/all", $data);
+            $data["listaReservations"] = $this->reservation->getAll();
+            View::render("reservation/all", $data);
             
         } else {
             $data["error"] = "No tienes permiso para eso";
@@ -99,15 +121,15 @@ class ResourcesController{
 
     // --------------------------------- FORMULARIO MODIFICAR RESOURCE ----------------------------------------
 
-    public function formularioModificarResource(){
+    public function formularioModificarReservation(){
         if ($this->esAdmin==1) {
             // Recuperamos la id del libro a modificar y la asignamos a data
-            $array = $this->resource->get($_REQUEST["idResource"]);
-            $data["resource"] = $array[0];
+            $array = $this->reservation->get($_REQUEST["idReservation"]);
+            $data["reservation"] = $array[0];
             
             // Renderizamos la vista de inserción de recursos, pero enviándole los datos del recurso ya obtenido en su totalidad.
             // La vista en si se encarga de utilizar los datos pasados para cargar el formulario y trabajar a partir de ahi
-            View::render("resource/form", $data);
+            View::render("reservation/form", $data);
             
         } else {
             $data["error"] = "No tienes permiso para eso";
@@ -118,20 +140,20 @@ class ResourcesController{
 
     // --------------------------------- MODIFICAR RESOURCE ----------------------------------------
 
-    public function modificarResource(){
+    public function modificarReservation(){
 
         if ($this->esAdmin==1) {
             // Primero, recuperamos todos los datos del formulario
 
             //Recuperamos los datos del formulario.
-            $id = Seguridad::limpiar($_REQUEST["id"]);
-            $nameRes = Seguridad::limpiar($_REQUEST["nameRes"]);
-            $description = Seguridad::limpiar($_REQUEST["description"]);
-            $location = Seguridad::limpiar($_REQUEST["location"]);
-            $image = $this->resource->uploadImage() ?? $_REQUEST["image"];
+            $idReservation = Seguridad::limpiar($_REQUEST["idReservation"]);
+            $idUser = Seguridad::limpiar($_REQUEST["idUser"]);
+            $idTimeSlot = Seguridad::limpiar($_REQUEST["idTimeSlot"]);
+            $date = Seguridad::limpiar($_REQUEST["date"]);
+            $remark = Seguridad::limpiar($_REQUEST["remark"]);
 
             // Pedimos al modelo que haga el update
-            $result = $this->resource->update($id, $nameRes, $description, $location, $image);
+            $result = $this->reservation->update($idReservation, $idUser, $idTimeSlot, $date, $remark);
             if ($result == 1) {
                 $data["info"] = "Recurso actualizado con éxito";
             } else {
@@ -139,8 +161,8 @@ class ResourcesController{
             }
             //Segun la respuesta de la db decimos si se ha realizado correctamente o no
             //Y volvemos a cargar la vista inicial
-            $data["listaResources"] = $this->resource->getAll();
-            View::render("resource/all", $data);
+            $data["listaReservations"] = $this->reservation->getAll();
+            View::render("reservation/all", $data);
         } else {
             $data["error"] = "No tienes permiso para eso";
             View::render("menu/start", $data);
@@ -153,4 +175,7 @@ class ResourcesController{
 
 
 
-} // class
+
+
+
+}

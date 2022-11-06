@@ -63,7 +63,7 @@ if (isset($resource)) {
 } else {
     echo "  <input type='hidden' name='action' value='insertarResource'>";
 }
-echo '<button name="action" value="mostrarListaResources"  >Inicio</button>';
+echo '<button name="action" value="mostrarListaResources"  >Volver</button>';
 
 echo "	<input type='submit'></form>";
 
