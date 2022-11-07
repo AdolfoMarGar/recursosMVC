@@ -39,6 +39,7 @@ class User extends Model{
         return $ok;
     }
 
+    //comprueba el usuario y la contraseña introducidas en el login 
     public function login($username, $password) {
         $array = $this->db->selectQuery("SELECT * FROM users WHERE username='$username' AND password='$password'");
         if (count($array) == 1) {

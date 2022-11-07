@@ -38,8 +38,10 @@ class TimeSlot extends Model{
         return $ok;
     }
 
-    public function getSinOcupados($id){
-        $sql ="SELECT * FROM `timeSlot` WHERE NOT(`id`='".$id."'); ";
+    //obtiene los tramos horarios donde la/las id introducida no aparece 
+    public function getSinOcupados($idArray){
+        
+        $sql ="SELECT * FROM `timeSlot` where not `id` in $idArray;  ";
         $result = $this->db->selectQuery($sql);
         
         return $result;

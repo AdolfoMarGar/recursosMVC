@@ -16,7 +16,7 @@ if (isset($data["error"])) {
 
 // Ahora, la tabla con los datos de los libros
 if (count($listaResources) == 0) {
-  echo "No hay datos";
+  echo "No quedan tramos horarios.";
 } else {
 
   echo "<table border ='1'>";
@@ -36,11 +36,12 @@ if (count($listaResources) == 0) {
 
     echo '<td>';
 
-    echo "<form action = '/' method = 'post'>";
+    echo "<form action = '/' method = 'get'>";
     echo "<input type='hidden' name='controller' value='ReservationsController'>";
     echo "<input type='hidden' name='idResource' value='".$fila->id."'>";
     echo '<button name="action" value="selectTimeSlot">Seleccionar</button>';
-    
+    echo "</form>";
+
 
     echo'</td>';
     echo "</tr>";
@@ -50,11 +51,6 @@ if (count($listaResources) == 0) {
   echo "</table>";
 
 
-
-
-
-
-  echo "</form>";
 }
 
 

@@ -74,13 +74,32 @@ class ReservationsController{
         if(count($listaReservations)==0){
             //si no hay ninguno se muestran todos los tramos horarios
             $listaTimeSlot = $this->timeSlot->getAll();
+            
         }else{
-            foreach($listaReservations as $fila){
-                //sino se mostraran los no ocupados
-                $listaTimeSlot= $this->timeSlot->getSinOcupados($fila->idTimeSlot);
+            //la var $arrayId es un array en formato sql a mano.
+            //sino se mostraran los no ocupados
+
+            if(count($listaReservations)==1){
+                $arrayId = "(".$listaReservations[0]->idTimeSlot.")";
+                echo $arrayId;
+                $listaTimeSlot= $this->timeSlot->getSinOcupados($arrayId);
 
             }
+            else{
+                 $arrayId = "(";
+                 $arrayId = $arrayId.$listaReservations[0]->idTimeSlot;
+                 for ($i=1; $i <count($listaReservations) ; $i++) { 
+                    $arrayId = $arrayId.",";
+                    $arrayId = $arrayId.$listaReservations[$i]->idTimeSlot;
+
+                }
+                $arrayId = $arrayId.")";
+                $listaTimeSlot= $this->timeSlot->getSinOcupados($arrayId);
+
+            }
+            
         }
+        
         //se asignan los datos obtenidos a data y se carga el formulario
         $data["listaTimeSlot"] = $listaTimeSlot;
         View::render("reservation/selectTimeSlot", $data);      

@@ -1,5 +1,4 @@
 <?php
-
 // MODELO DE RECURSOS
 
 include_once "model.php";
@@ -56,7 +55,6 @@ class Resources extends Model{
               if (move_uploaded_file($temp, 'images/'.$archivo)) {
                   return 'images/'.$archivo;
                   //Si se ha realizado correctamente devolvemos la ruta del archivo donde se ha guardado la imagen en el server
-
               }
               else {
                  //Si no se ha podido subir la imagen, mostramos un mensaje de error

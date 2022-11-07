@@ -1,6 +1,6 @@
 <?php
 
-// MODELO DE RECURSOS
+// MODELO DE RESERVAS
 
 include_once "model.php";
 class Reservations extends Model{
@@ -24,50 +24,29 @@ class Reservations extends Model{
         return $this->db->dataManipulation("INSERT INTO reservations (idResource,idUser,idTimeSlot,date,remark) VALUES ('$idResource','$idUser', '$idTimeSlot', '$date', '$remark')");
     }
 
-
-    // Actualiza un resource. Devuelve 1 si tiene éxito y 0 en caso de fallo.
-    public function update($idResource, $idUser, $idTimeSlot, $date, $remark)
-    {
-        $ok = $this->db->dataManipulation("UPDATE reservations SET
-                                idResource = '$idResource',
-                                idUser = '$idUser',
-                                idTimeSlot = '$idTimeSlot',
-                                date = '$date',
-                                remark = '$remark'
-                                WHERE idResource = '$idResource'
-                                AND idUser = '$idTimeSlot'
-                                AND idTimeSlot = '$idTimeSlot'");
-        return $ok;
-    }
-
+    //borra segun el id de un recurso
     public function deleteFromResources($id) {
         $result = $this->db->dataManipulation("DELETE FROM ".$this->table." WHERE idResource = $id");
         return $result;
       }
 
+    //Obtiene una reserva segun la id de un recurso existente
     public function getIdResources($id) {
         $sql = 'SELECT * FROM `reservations` WHERE `idResource` = '.$id.';';
         $result = $this->db->selectQuery($sql);
         return $result;
     }
 
+    //borra segun el id de un usuario
     public function deleteFromUser($id) {
     $result = $this->db->dataManipulation("DELETE FROM ".$this->table." WHERE idUser = $id");
     return $result;
     }
+
+    //borra segun el id de un tramo horario
     public function deleteFromTimeSlot($id) {
         $result = $this->db->dataManipulation("DELETE FROM ".$this->table." WHERE idTimeSlot = $id");
         return $result;
     }
-
-    /*
-    public function getSinOcupados($idResource, $idTimeSlot){
-        $sql ="SELECT * FROM `reservations` WHERE NOT(`idResource`='".$idResource."'and `idTimeSlot`=".$idTimeSlot."); ";
-        $result = $this->db->selectQuery($sql);
-        return $result;
-
-    }
-    */
-
 
 }

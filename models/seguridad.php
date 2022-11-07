@@ -1,22 +1,17 @@
 <?php
 
 // CAPA DE SEGURIDAD
-
-// Esta clase puede mejorarse indefinidamente para construir
-// aplicaciones más seguras. El resto de la aplicación no sufrirá ningún cambio.
-
 // En esta implementación, usaremos variables de sesión para la autenticación de usuarios
 // y limpieza de variables sencilla basada en una lista de palabras y caracteres prohibidos. 
 
 class Seguridad {
-
-    // Abre una sesión y guarda el id del usuario
+    // Abre una sesión y guarda el id del usuario y su tipo
     public static function iniciarSesion($id,$type) {
         $_SESSION["idUsuario"] = $id;
         $_SESSION["tipoUsuario"] = $type;
     }
 
-    // Cierra una sesión y elimina el id del usuario
+    // Cierra una sesión y todas las variables de sesion
     public static function cerrarSesion() {
         session_destroy();
     }
@@ -41,6 +36,7 @@ class Seguridad {
     }
 
     public static function esAdmin() {
+        //devuelve 1 si el usuario es administrador y 0 si no lo es(usuario)
         if ($_SESSION["tipoUsuario"]=="admin") {
             return 1;
         }else {
