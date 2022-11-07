@@ -1,29 +1,30 @@
 <?php
-//Falta implementar la capa de seguridad.
+// CONTROLADOR DE USER
+//El controlador es igual al de resources solo que varian los datos para que cuadren con la tabla user
+//Excepto por el control de inicio/fin de sesion el cual se controla desde este controlador
+//ya que esta tabla almacena los usuarios y sus datos
 
-// CONTROLADOR DE User
-include_once("models/user.php");        // Modelo de User
-include_once("models/seguridad.php");   // Modelo de seguridad
-include_once("views/view.php");         // Modelo base de View
+include_once("models/user.php");        
+include_once("models/seguridad.php");  
+include_once("views/view.php");       
 
 class UserController{
-    private $user;  // Objeto del modelo User para utilizar sus metodos
-    private $reservation;  // Objeto del modelo User para utilizar sus metodos
+    private $user; 
+    private $reservation;  
     private $esAdmin;     
 
 
     public function __construct(){
-        $this->user = new User();  //Inicializamos el objeto User
-        $this->reservation = new Reservations();  //Inicializamos el objeto User
+        $this->user = new User();  
+        $this->reservation = new Reservations(); 
         $this->esAdmin =Seguridad::esAdmin();
-
     }
 
-    // --------------------------------- MOSTRAR LISTA DE RECURSOS ----------------------------------------
-    public function mostrarListaUser(){
+    // --------------------------------- MOSTRAR LISTA DE USER ----------------------------------------
+    public function mostrarListaUser($data){
         if ($this->esAdmin==1) {
-            $data["listaUser"] = $this->user->getAll();  //Obtenemos un arraya con la totalidad de los elementos en la tabla recursos
-            View::render("user/all", $data);  //Llamamos a la vista User/all y le pasamos los datos obtenidos.
+            $data["listaUser"] = $this->user->getAll();  
+            View::render("user/all", $data);  
         } else {
             $data["error"] = "No tienes permiso para eso";
             View::render("menu/start", $data);
@@ -31,13 +32,12 @@ class UserController{
         
     }
 
-    // --------------------------------- FORMULARIO ALTA DE RECURSOS ----------------------------------------
+    // --------------------------------- FORMULARIO ALTA DE USER ----------------------------------------
 
     public function formularioInsertarUser(){
         if ($this->esAdmin==1) {
-            $data["user"]=null; //Le pasamos User=null para que no de error al buscar en algo inexistente. Aunque no tenga valores al asignarle null
-                                    //se le ha creado el espacio de memoria y nos ahorra problemas
-            View::render("user/form", $data);  //LLamamos a la vista formulario de User
+            $data["user"]=null; 
+            View::render("user/form", $data); 
         } else {
             $data["error"] = "No tienes permiso para eso";
             View::render("menu/start", $data);
@@ -50,50 +50,39 @@ class UserController{
     public function insertarUser(){
 
         if ($this->esAdmin==1) {
-            // Primero, recuperamos todos los datos del formulario
-            
             $username = Seguridad::limpiar($_REQUEST["username"]);
             $password = Seguridad::limpiar($_REQUEST["password"]);
             $realname = Seguridad::limpiar($_REQUEST["realname"]);
             $type = Seguridad::limpiar($_REQUEST["type"]);
-            $result = $this->user->insert($username, $password, $realname, $type); //Se ejecuta un insert a la db a traves del modelo User
+            $result = $this->user->insert($username, $password, $realname, $type); 
             if ($result == 1) {
-                $data["info"] = "Recuros insertado con éxito.";
+                $data["info"] = "Usuario insertado con éxito.";
             } else {
-                $data["error"] = "Error al insertar el recurso.";
+                $data["error"] = "Error al insertar el usuario.";
             }
-            //Segun la respuesta de la db indicamos si se ha realizado el insert correctamente o no.
 
-            //Vovlemos a cargar la vista principal de User
-            $data["listaUser"] = $this->user->getAll();
-            View::render("user/all", $data);
+            $this->mostrarListaUser($data);
             
         } else {
             $data["error"] = "No tienes permiso para eso";
             View::render("menu/start", $data);
         }
-        
     }
 
     // --------------------------------- BORRAR USER ----------------------------------------
 
     public function borrarUser(){
         if ($this->esAdmin==1) {
-            // Obtenemos el id del recurso a borrar a traves del formulario
             $id = Seguridad::limpiar($_REQUEST["idUser"]);
-            // Pedimos al modelo user que intente borrarlo
             $this->reservation->deleteFromUser($id);
             $result = $this->user->delete($id);
-            // Comprobamos si el borrado ha tenido éxito segun la respuesta de la db
             if ($result == 0) {
-                $data["error"] = "Ha ocurrido un error al borrar el recurso. Por favor, inténtelo de nuevo";
+                $data["error"] = "Ha ocurrido un error al borrar el usuario. Por favor, inténtelo de nuevo";
             } else {
-                $data["info"] = "Recurso borrado con éxito";
+                $data["info"] = "Usuario borrado con éxito";
             }
-            //Volvemos a cargar todos los recursos
-            $data["listaUser"] = $this->user->getAll();
-            View::render("user/all", $data);
-            
+            $this->mostrarListaUser($data);
+
         } else {
             $data["error"] = "No tienes permiso para eso";
             View::render("menu/start", $data);
@@ -105,12 +94,9 @@ class UserController{
 
     public function formularioModificarUser(){
         if ($this->esAdmin==1) {
-            // Recuperamos la id del libro a modificar y la asignamos a data
             $array = $this->user->get($_REQUEST["idUser"]);
             $data["user"] = $array[0];
             
-            // Renderizamos la vista de inserción de recursos, pero enviándole los datos del recurso ya obtenido en su totalidad.
-            // La vista en si se encarga de utilizar los datos pasados para cargar el formulario y trabajar a partir de ahi
             View::render("user/form", $data);
             
         } else {
@@ -125,32 +111,28 @@ class UserController{
     public function modificarUser(){
 
         if ($this->esAdmin==1) {
-            // Primero, recuperamos todos los datos del formulario
-
-            //Recuperamos los datos del formulario.
             $id = Seguridad::limpiar($_REQUEST["id"]);
             $username = Seguridad::limpiar($_REQUEST["username"]);
             $password = Seguridad::limpiar($_REQUEST["password"]);
             $realname = Seguridad::limpiar($_REQUEST["realname"]);
             $type = Seguridad::limpiar($_REQUEST["type"]);
 
-            // Pedimos al modelo que haga el update
             $result = $this->user->update($id, $username, $password, $realname, $type);
             if ($result == 1) {
-                $data["info"] = "Recurso actualizado con éxito";
+                $data["info"] = "Usuario actualizado con éxito";
             } else {
-                $data["error"] = "Ha ocurrido un error al modificar el recurso. Por favor, inténtelo más tarde";
+                $data["error"] = "Ha ocurrido un error al modificar el usuario. Por favor, inténtelo más tarde";
             }
-            //Segun la respuesta de la db decimos si se ha realizado correctamente o no
-            //Y volvemos a cargar la vista inicial
-            $data["listaUser"] = $this->user->getAll();
-            View::render("user/all", $data);
+            $this->mostrarListaUser($data);
+
         } else {
             $data["error"] = "No tienes permiso para eso";
             View::render("menu/start", $data);
         }
         
     }
+
+    // --------------------------------- METODOS LOGIN ----------------------------------------
 
 
     // Muestra el formulario de login
@@ -179,13 +161,4 @@ class UserController{
         View::render("user/login", $data);
     }
  
-    
-
-
-
-    // --------------------------------- BUSCAR USER ----------------------------------------
-
-
-
-
 } // class

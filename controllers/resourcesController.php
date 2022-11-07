@@ -1,6 +1,4 @@
 <?php
-//Falta implementar la capa de seguridad.
-
 // CONTROLADOR DE RESOURCES
 include_once("models/resources.php");  // Modelo de resources
 include_once("models/seguridad.php");  // Modelo de seguridad
@@ -8,20 +6,20 @@ include_once("views/view.php");        // Modelo base de View
 
 class ResourcesController{
     private $resource;  // Objeto del modelo resource para utilizar sus metodos
-    private $reservation;  // Objeto del modelo resource para utilizar sus metodos
-    private $esAdmin;     
+    private $reservation;  // Objeto del modelo reservation para utilizar sus metodos
+    private $esAdmin;      //almacena si es admin el usuario que se esta utilizando.
 
 
     public function __construct(){
         $this->resource = new Resources();  //Inicializamos el objeto resource
-        $this->reservation = new Reservations();  //Inicializamos el objeto resource
-        $this->esAdmin =Seguridad::esAdmin();
+        $this->reservation = new Reservations();  //Inicializamos el objeto reservation
+        $this->esAdmin =Seguridad::esAdmin();   //obtenemos si el usuario es admin o no
     }
 
     // --------------------------------- MOSTRAR LISTA DE RECURSOS ----------------------------------------
-    public function mostrarListaResources(){
+    public function mostrarListaResources($data){
         if ($this->esAdmin==1) {
-            $data["listaResources"] = $this->resource->getAll();  //Obtenemos un arraya con la totalidad de los elementos en la tabla recursos
+            $data["listaResources"] = $this->resource->getAll();  //Obtenemos un array con la totalidad de los elementos en la tabla recursos
             View::render("resource/all", $data);  //Llamamos a la vista resource/all y le pasamos los datos obtenidos.
         } else {
             $data["error"] = "No tienes permiso para eso";
@@ -34,8 +32,8 @@ class ResourcesController{
 
     public function formularioInsertarResources(){
         if ($this->esAdmin==1) {
-            $data["resource"]=null; //Le pasamos resource=null para que no de error al buscar en algo inexistente. Aunque no tenga valores al asignarle null
-                                    //se le ha creado el espacio de memoria y nos ahorra problemas
+            $data["resource"]=null; //le asignamos un valor null ya que el formulario intenta extraer los datos de manera default
+                                    //y si $data["resource"] no existe siquiera crea un error.
             View::render("resource/form", $data);  //LLamamos a la vista formulario de resources
         } else {
             $data["error"] = "No tienes permiso para eso";
@@ -47,26 +45,22 @@ class ResourcesController{
     // --------------------------------- INSERTAR RESOURCE ----------------------------------------
 
     public function insertarResource(){
-
         if ($this->esAdmin==1) {
             // Primero, recuperamos todos los datos del formulario
-            
             $nameRes = Seguridad::limpiar($_REQUEST["nameRes"]);
             $description = Seguridad::limpiar($_REQUEST["description"]);
             $location = Seguridad::limpiar($_REQUEST["location"]);
-            $image = $this->resource->uploadImage() ?? "";       //Se le asigna "" si no se sube ninguna imagen.      
-            $result = $this->resource->insert($nameRes, $description, $location, $image); //Se ejecuta un insert a la db a traves del modelo resources
-            if ($result == 1) {
+            $image = $this->resource->uploadImage() ?? "";       //Se le asigna "" si no se sube ninguna imagen.  
+            
+            //Llamamos a insert del modelo resource y almacenamos el valor de info de la respuesta para indicar si se ha realizado correctamente o no.
+            $result = $this->resource->insert($nameRes, $description, $location, $image); 
+            if ($result == 1){
                 $data["info"] = "Recuros insertado con éxito.";
             } else {
                 $data["error"] = "Error al insertar el recurso.";
             }
-            //Segun la respuesta de la db indicamos si se ha realizado el insert correctamente o no.
+            $this->mostrarListaResources($data);//Volvemos a mostrar la lista.
 
-            //Vovlemos a cargar la vista principal de resources
-            $data["listaResources"] = $this->resource->getAll();
-            View::render("resource/all", $data);
-            
         } else {
             $data["error"] = "No tienes permiso para eso";
             View::render("menu/start", $data);
@@ -80,18 +74,20 @@ class ResourcesController{
         if ($this->esAdmin==1) {
             // Obtenemos el id del recurso a borrar a traves del formulario
             $id = Seguridad::limpiar($_REQUEST["idResource"]);
+             //borramos las reservas que existan con ese id de resources
+             $this->reservation->deleteFromResources($id);    
             // Pedimos al modelo resource que intente borrarlo
             $result = $this->resource->delete($id);
-            $result = $this->reservation->deleteFromResources($id);            
+                   
             // Comprobamos si el borrado ha tenido éxito segun la respuesta de la db
             if ($result == 0) {
                 $data["error"] = "Ha ocurrido un error al borrar el recurso. Por favor, inténtelo de nuevo";
             } else {
                 $data["info"] = "Recurso borrado con éxito";
             }
-            //Volvemos a cargar todos los recursos
-            $data["listaResources"] = $this->resource->getAll();
-            View::render("resource/all", $data);
+
+            $this->mostrarListaResources($data);//Volvemos a mostrar la lista.
+
             
         } else {
             $data["error"] = "No tienes permiso para eso";
@@ -124,14 +120,12 @@ class ResourcesController{
     public function modificarResource(){
 
         if ($this->esAdmin==1) {
-            // Primero, recuperamos todos los datos del formulario
-
             //Recuperamos los datos del formulario.
             $id = Seguridad::limpiar($_REQUEST["id"]);
             $nameRes = Seguridad::limpiar($_REQUEST["nameRes"]);
             $description = Seguridad::limpiar($_REQUEST["description"]);
             $location = Seguridad::limpiar($_REQUEST["location"]);
-            $image = $this->resource->uploadImage() ?? $_REQUEST["image"];
+            $image = $this->resource->uploadImage() ?? $_REQUEST["image"]; //se comprueba si se ha subido una nueva imagen y sino se obtiene la ya establecida.
 
             // Pedimos al modelo que haga el update
             $result = $this->resource->update($id, $nameRes, $description, $location, $image);
@@ -142,18 +136,13 @@ class ResourcesController{
             }
             //Segun la respuesta de la db decimos si se ha realizado correctamente o no
             //Y volvemos a cargar la vista inicial
-            $data["listaResources"] = $this->resource->getAll();
-            View::render("resource/all", $data);
+            $this->mostrarListaResources($data);//Volvemos a mostrar la lista.
+
         } else {
             $data["error"] = "No tienes permiso para eso";
             View::render("menu/start", $data);
         }
         
     }
-
-    // --------------------------------- BUSCAR RESOURCE ----------------------------------------
-
-
-
 
 } // class

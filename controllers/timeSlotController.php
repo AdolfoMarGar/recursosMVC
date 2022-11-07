@@ -1,27 +1,28 @@
 <?php
-//Falta implementar la capa de seguridad.
 
 // CONTROLADOR DE TimeSlot
-include_once("models/timeSlot.php");  // Modelo de TimeSlot
-include_once("models/seguridad.php");  // Modelo de seguridad
-include_once("views/view.php");        // Modelo base de View
+
+//El controlador es igual al de resources solo que varian los datos para que cuadren con la tabla timeSlot
+include_once("models/timeSlot.php");
+include_once("models/seguridad.php");  
+include_once("views/view.php");
 
 class TimeSlotController{
-    private $timeSlot;  // Objeto del modelo TimeSlot para utilizar sus metodos
-    private $reservation;  // Objeto del modelo TimeSlot para utilizar sus metodos
+    private $timeSlot;  
+    private $reservation; 
     private $esAdmin;     
 
     public function __construct(){
-        $this->timeSlot = new TimeSlot();  //Inicializamos el objeto TimeSlot
-        $this->reservation = new Reservations();  //Inicializamos el objeto TimeSlot
+        $this->timeSlot = new TimeSlot(); 
+        $this->reservation = new Reservations(); 
         $this->esAdmin =Seguridad::esAdmin();
     }
 
-    // --------------------------------- MOSTRAR LISTA DE RECURSOS ----------------------------------------
-    public function mostrarListaTimeSlot(){
+    // --------------------------------- MOSTRAR LISTA DE TIMESLOT ----------------------------------------
+    public function mostrarListaTimeSlot($data){
         if ($this->esAdmin==1) {
-            $data["listaTimeSlot"] = $this->timeSlot->getAll();  //Obtenemos un arraya con la totalidad de los elementos en la tabla recursos
-            View::render("timeSlot/all", $data);  //Llamamos a la vista TimeSlot/all y le pasamos los datos obtenidos.
+            $data["listaTimeSlot"] = $this->timeSlot->getAll();  
+            View::render("timeSlot/all", $data);  
         } else {
             $data["error"] = "No tienes permiso para eso";
             View::render("menu/start", $data);
@@ -29,42 +30,32 @@ class TimeSlotController{
         
     }
 
-    // --------------------------------- FORMULARIO ALTA DE RECURSOS ----------------------------------------
+    // --------------------------------- FORMULARIO ALTA DE TIMESLOT ----------------------------------------
 
     public function formularioInsertarTimeSlot(){
         if ($this->esAdmin==1) {
-            $data["timeSlot"]=null; //Le pasamos TimeSlot=null para que no de error al buscar en algo inexistente. Aunque no tenga valores al asignarle null
-                                    //se le ha creado el espacio de memoria y nos ahorra problemas
-            View::render("timeSlot/form", $data);  //LLamamos a la vista formulario de TimeSlot
+            $data["timeSlot"]=null; 
+            View::render("timeSlot/form", $data); 
         } else {
             $data["error"] = "No tienes permiso para eso";
             View::render("menu/start", $data);
         }
-        
     }
 
     // --------------------------------- INSERTAR TIMESLOT ----------------------------------------
 
     public function insertarTimeSlot(){
-
-        if ($this->esAdmin==1) {
-            // Primero, recuperamos todos los datos del formulario
-            
+        if ($this->esAdmin==1) {          
             $dayOfWeek = Seguridad::limpiar($_REQUEST["dayOfWeek"]);
             $startTime = Seguridad::limpiar($_REQUEST["startTime"]);
             $endTime = Seguridad::limpiar($_REQUEST["endTime"]);
-            $result = $this->timeSlot->insert($dayOfWeek, $startTime, $endTime); //Se ejecuta un insert a la db a traves del modelo TimeSlot
+            $result = $this->timeSlot->insert($dayOfWeek, $startTime, $endTime); 
             if ($result == 1) {
-                $data["info"] = "Recuros insertado con éxito.";
+                $data["info"] = "Tramo horario insertado con éxito.";
             } else {
-                $data["error"] = "Error al insertar el recurso.";
+                $data["error"] = "Error al insertar el tramo horario.";
             }
-            //Segun la respuesta de la db indicamos si se ha realizado el insert correctamente o no.
-
-            //Vovlemos a cargar la vista principal de TimeSlot
-            $data["listaTimeSlot"] = $this->timeSlot->getAll();
-            View::render("timeSlot/all", $data);
-            
+            $this->mostrarListaTimeSlot($data);   
         } else {
             $data["error"] = "No tienes permiso para eso";
             View::render("menu/start", $data);
@@ -76,20 +67,15 @@ class TimeSlotController{
 
     public function borrarTimeSlot(){
         if ($this->esAdmin==1) {
-            // Obtenemos el id del recurso a borrar a traves del formulario
             $id = Seguridad::limpiar($_REQUEST["idTimeSlot"]);
-            // Pedimos al modelo timeSlot que intente borrarlo
             $this->reservation ->deleteFromTimeSlot($id);
             $result = $this->timeSlot->delete($id);
-            // Comprobamos si el borrado ha tenido éxito segun la respuesta de la db
             if ($result == 0) {
-                $data["error"] = "Ha ocurrido un error al borrar el recurso. Por favor, inténtelo de nuevo";
+                $data["error"] = "Ha ocurrido un error al borrar el tramo horario. Por favor, inténtelo de nuevo";
             } else {
-                $data["info"] = "Recurso borrado con éxito";
+                $data["info"] = "Tramo horario borrado con éxito";
             }
-            //Volvemos a cargar todos los recursos
-            $data["listaTimeSlot"] = $this->timeSlot->getAll();
-            View::render("timeSlot/all", $data);
+            $this->mostrarListaTimeSlot($data);   
             
         } else {
             $data["error"] = "No tienes permiso para eso";
@@ -102,29 +88,20 @@ class TimeSlotController{
 
     public function formularioModificarTimeSlot(){
         if ($this->esAdmin==1) {
-            // Recuperamos la id del libro a modificar y la asignamos a data
             $array = $this->timeSlot->get($_REQUEST["idTimeSlot"]);
             $data["timeSlot"] = $array[0];
-            
-            // Renderizamos la vista de inserción de recursos, pero enviándole los datos del recurso ya obtenido en su totalidad.
-            // La vista en si se encarga de utilizar los datos pasados para cargar el formulario y trabajar a partir de ahi
             View::render("timeSlot/form", $data);
-            
+    
         } else {
             $data["error"] = "No tienes permiso para eso";
             View::render("menu/start", $data);
         }
-        
     }
 
     // --------------------------------- MODIFICAR TIMESLOT ----------------------------------------
 
     public function modificarTimeSlot(){
-
         if ($this->esAdmin==1) {
-            // Primero, recuperamos todos los datos del formulario
-
-            //Recuperamos los datos del formulario.
             $id = Seguridad::limpiar($_REQUEST["id"]);
             $dayOfWeek = Seguridad::limpiar($_REQUEST["dayOfWeek"]);
             $startTime = Seguridad::limpiar($_REQUEST["startTime"]);
@@ -133,25 +110,15 @@ class TimeSlotController{
             // Pedimos al modelo que haga el update
             $result = $this->timeSlot->update($id, $dayOfWeek, $startTime, $endTime);
             if ($result == 1) {
-                $data["info"] = "Recurso actualizado con éxito";
+                $data["info"] = "Tramo horario actualizado con éxito";
             } else {
-                $data["error"] = "Ha ocurrido un error al modificar el recurso. Por favor, inténtelo más tarde";
+                $data["error"] = "Ha ocurrido un error al modificar el tramo horario. Por favor, inténtelo más tarde";
             }
-            //Segun la respuesta de la db decimos si se ha realizado correctamente o no
-            //Y volvemos a cargar la vista inicial
-            $data["listaTimeSlot"] = $this->timeSlot->getAll();
-            View::render("timeSlot/all", $data);
+            $this->mostrarListaTimeSlot($data);   
         } else {
             $data["error"] = "No tienes permiso para eso";
             View::render("menu/start", $data);
         }
         
     }
-
-    // --------------------------------- BUSCAR TIMESLOT ----------------------------------------
-
-  
-
-
-
 } // class

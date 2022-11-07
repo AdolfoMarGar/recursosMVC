@@ -1,20 +1,13 @@
 <?php
-
-include_once("models/menu.php");
-include_once("models/seguridad.php");  // Modelo de seguridad
 include_once("views/view.php");        // Modelo base de View
 
-
+//Controlador muy sencillo ya que solo llama a la vista del menu. Podria incluso eliminarse. 
+//Pero si hubiese una implementacion de un menu mas complejo podria utilizarse este controlador
 class MenuController{
-    public function __construct(){
-
-    }
+    public function __construct(){}
 
     public function mostrarStartMenu(){
-        View::render("menu/start", null);  //Llamamos a la vista resource/all y le pasamos los datos obtenidos.
+        View::render("menu/start", null);  //Llamamos a la vista del menu de inicio.
 
     }
-
 }
-
-

@@ -25,4 +25,21 @@ if (isset($_REQUEST["action"])) {
 
 // Creamos un objeto de tipo $controller y llamamos al método $action()
 $gestorMVC = new $controller();
-$gestorMVC->$action();
+switch ($action) {
+    case "mostrarListaResources":
+        $gestorMVC->$action(null);
+        break;
+    case "mostrarListaReservations":
+        $gestorMVC->$action(null);
+        break;
+    case "mostrarListaTimeSlot":
+        $gestorMVC->$action(null);
+        break;
+    case "mostrarListaUser":
+        $gestorMVC->$action(null);
+        break;
+                
+    default :
+        $gestorMVC->$action();
+        break;  
+}
