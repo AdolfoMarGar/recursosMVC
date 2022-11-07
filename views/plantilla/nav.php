@@ -21,7 +21,7 @@
     echo "<input type='hidden' name='controller' value='UserController'>";
     echo '<button name="action" value="mostrarListaUser"><h4>Usuarios</h4></button>';
     echo "</form>";
-   
+  
   }
 
   echo "<form action = '/' method = 'post'>";
@@ -33,9 +33,6 @@
   echo "<input type='hidden' name='controller' value='UserController'>";
   echo '<button name="action" value="cerrarSesion"><h4>Logout</h4></button>';
   echo "</form>";
-
-
-
 
   echo "</tr></table>";
   echo "</br>";
