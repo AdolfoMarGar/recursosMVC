@@ -1,4 +1,5 @@
 <?php
+//menu de inicio de la aplicacion en la cual te da acceso a x elementos segun tu tipo de usuario
 
 echo "<h1> SISTEMA GESTOR DE RECURSOS </h1>";
 if (isset($data["error"])) {

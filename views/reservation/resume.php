@@ -1,8 +1,7 @@
 <?php
 include_once("views/plantilla/nav.php");
-// VISTA PARA LA LISTA DE LIBROS
+// VISTA RESUMEN DE LA RESERVA QUE SE ESTA REALIZANDO
 
-// Recuperamos la lista de libros
 $resource = $data["Resource"];
 $timeSlot = $data["TimeSlot"];
 

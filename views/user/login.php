@@ -1,6 +1,7 @@
 <h1>Control de acceso</h1>
 
 <?php
+//FORMULARIO DE INICIO DE SESION
 if (isset($data["error"])) {
     echo "<div style='color: red'>".$data["error"]."</div>";
 }

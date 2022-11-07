@@ -1,4 +1,5 @@
 <?php
+//menu de navegacion al inicio de la pagina web.
   echo "<table><tr>";
 
   echo "<form action = '/' method = 'post'>";

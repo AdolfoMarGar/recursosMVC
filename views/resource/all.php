@@ -1,8 +1,8 @@
 <?php
 include_once("views/plantilla/nav.php");
-// VISTA PARA LA LISTA DE LIBROS
+// VISTA PARA LA LISTA DE RECURSOS
 
-// Recuperamos la lista de libros
+// Recuperamos la lista de RECURSOS
 $listaResources = $data["listaResources"];
 
 // Si hay algún mensaje de feedback, lo mostramos
@@ -14,7 +14,7 @@ if (isset($data["error"])) {
   echo "<div style='color:red'>".$data["error"]."</div>";
 }
 
-// Ahora, la tabla con los datos de los libros
+// Ahora, la tabla con los datos de los RECURSOS
 if (count($listaResources) == 0) {
   echo "No hay datos";
 } else {

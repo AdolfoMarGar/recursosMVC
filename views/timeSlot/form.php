@@ -1,26 +1,26 @@
 <?php
 include_once("views/plantilla/nav.php");
 
-// VISTA PARA INSERCIÓN/EDICIÓN DE resourceS
+// VISTA PARA INSERCIÓN/EDICIÓN DE timeslotS
 
-extract($data);   // Extrae el contenido de $data y lo convierte en variables individuales  ej ($resource)
+extract($data);   // Extrae el contenido de $data y lo convierte en variables individuales  ej ($timeslot)
 
 // Vamos a usar la misma vista para insertar y modificar. Para saber si hacemos una cosa u otra,
-// usaremos la variable $resource: si existe, es porque estamos modificando un resource. Si no, estamos insertando uno nuevo.
+// usaremos la variable $timeslot: si existe, es porque estamos modificando un timeslot. Si no, estamos insertando uno nuevo.
 if (isset($timeSlot)) {   
     echo "<h1>Modificación de tramo horario</h1>";
 } else {
     echo "<h1>Inserción de tramo horario</h1>";
 }
 
-// Sacamos los datos del resource (si existe) a variables individuales para mostrarlo en los inputs del formulario.
-// (Si no hay resource, dejamos los campos en blanco y el formulario servirá para inserción).
+// Sacamos los datos del timeslot (si existe) a variables individuales para mostrarlo en los inputs del formulario.
+// (Si no hay timeslot, dejamos los campos en blanco y el formulario servirá para inserción).
 $id = $timeSlot->id ?? ""; 
 $dayOfWeek = $timeSlot->dayOfWeek ?? "";
 $startTime = $timeSlot->startTime ?? "";
 $endTime = $timeSlot->endTime ?? "";
 
-// Creamos el formulario con los campos del resource
+// Creamos el formulario con los campos del timeslot
 echo "<form enctype='multipart/form-data' action = '/' method = 'post'>
     <input type='hidden' name='controller' value='TimeSlotController'>
 

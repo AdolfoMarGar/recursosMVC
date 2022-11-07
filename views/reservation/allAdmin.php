@@ -1,8 +1,7 @@
 <?php
 include_once("views/plantilla/nav.php");
-// VISTA PARA LA LISTA DE LIBROS
+// VISTA PARA LA LISTA DE reservas
 
-// Recuperamos la lista de libros
 $listaResources = $data["listaResources"];
 $listaUser = $data["listaUser"];
 $listaTimeSlot = $data["listaTimeSlot"];
@@ -17,7 +16,7 @@ if (isset($data["error"])) {
   echo "<div style='color:red'>".$data["error"]."</div>";
 }
 
-// Ahora, la tabla con los datos de los libros
+// Ahora, la tabla con los datos de los reservas
 if (count($listaResources) == 0) {
   echo "No hay datos";
 } else {

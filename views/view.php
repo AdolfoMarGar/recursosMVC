@@ -6,3 +6,4 @@
             include("./views/plantilla/end.php");
         }
     }
+    //CARGA DE MANERA GENERICA EL $NOMBREVISTA PASADO.

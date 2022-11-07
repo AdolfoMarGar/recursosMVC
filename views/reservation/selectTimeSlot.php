@@ -1,8 +1,8 @@
 <?php
 include_once("views/plantilla/nav.php");
-// VISTA PARA LA LISTA DE LIBROS
+// VISTA PARA SELECCIONAR UN TRAMO HORARIO Y UNA FECHA PARA LA RESERVA
 
-// Recuperamos la lista de libros
+// Recuperamos la lista de reservas
 $listaTimeSlot = $data["listaTimeSlot"];
 
 // Si hay algún mensaje de feedback, lo mostramos
@@ -14,7 +14,7 @@ if (isset($data["error"])) {
   echo "<div style='color:red'>".$data["error"]."</div>";
 }
 
-// Ahora, la tabla con los datos de los libros
+// Ahora, la tabla con los datos de los reservas
 if (count($listaTimeSlot) == 0) {
   echo "No hay datos";
 } else {
