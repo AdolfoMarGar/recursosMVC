@@ -81,7 +81,6 @@ class ReservationsController{
 
             if(count($listaReservations)==1){
                 $arrayId = "(".$listaReservations[0]->idTimeSlot.")";
-                echo $arrayId;
                 $listaTimeSlot= $this->timeSlot->getSinOcupados($arrayId);
 
             }

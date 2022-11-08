@@ -1,1 +1,0 @@
-CREATE TABLE `gestionRec`.`timeSlot` (`id` INT(5) NOT NULL AUTO_INCREMENT , `dayOfWeek` VARCHAR(100) NOT NULL , `startTime` VARCHAR(100) NOT NULL , `endTime` VARCHAR(100) NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB; 
