@@ -26,6 +26,8 @@ SET time_zone = "+00:00";
 --
 -- Estructura de tabla para la tabla `reservations`
 --
+CREATE DATABASE gestionRec IF NOT EXISTS;
+USE gestionRec;
 
 CREATE TABLE `reservations` (
   `id` int(11) NOT NULL,

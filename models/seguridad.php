@@ -37,10 +37,12 @@ class Seguridad {
 
     public static function esAdmin() {
         //devuelve 1 si el usuario es administrador y 0 si no lo es(usuario)
-        if ($_SESSION["tipoUsuario"]=="admin") {
-            return 1;
-        }else {
-            return 0;
+        if(isset($_SESSION["tipoUsuario"])){
+            if ($_SESSION["tipoUsuario"]=="admin") {
+                return 1;
+            }else {
+                return 0;
+            }
         }
     }
 
